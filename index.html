@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAIL Interview Playground Generator — Human In the AI Loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── HAIL DESIGN SYSTEM (matched to sudheerkumargujjeli-human-in-the-ai-loop.lovable.app) ── */
+:root {
+  --brand:   #0A2540;
+  --accent:  #00C896;
+  --accent2: #00A37A;
+  --bg:      #F0FAF7;
+  --card:    #FFFFFF;
+  --border:  #C6EDE3;
+  --text:    #0F172A;
+  --muted:   #64748B;
+  --code-bg: #0D1117;
+  --code-tx: #E2E8F0;
+  --red:     #DC2626;
+  --amber:   #D97706;
+  --lime:    #059669;
+  --shadow:  0 1px 6px rgba(10,37,64,.08);
+  --radius:  12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;}
+
+/* ── TOPBAR — matches HAIL lovable nav ── */
+.topbar{
+  background:var(--brand);
+  color:#fff;
+  padding:0 28px;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:300;
+  box-shadow:0 2px 16px rgba(0,0,0,.28);
+}
+.tb-left{display:flex;align-items:center;gap:12px;}
+.hail-logo{
+  width:36px;height:36px;border-radius:8px;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.75rem;color:var(--brand);letter-spacing:.5px;
+  flex-shrink:0;
+}
+.tb-title{font-size:.95rem;font-weight:700;letter-spacing:-.2px;}
+.tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);margin-top:1px;}
+.tb-cta{
+  background:var(--accent);color:var(--brand);
+  font-weight:800;font-size:.8rem;
+  padding:9px 20px;border-radius:8px;
+  text-decoration:none;letter-spacing:.2px;
+  transition:background .2s,transform .15s;
+  white-space:nowrap;
+}
+.tb-cta:hover{background:#00e0ac;transform:translateY(-1px);}
+
+/* ── HERO GENERATOR ── */
+#gen-section{max-width:800px;margin:0 auto;padding:52px 24px 40px;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.3);
+  color:var(--accent2);font-size:.72rem;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:20px;
+}
+.hero-h{font-size:2.2rem;font-weight:900;color:var(--brand);line-height:1.15;letter-spacing:-.6px;margin-bottom:12px;}
+.hero-h em{color:var(--accent);font-style:normal;}
+.hero-p{font-size:.95rem;color:var(--muted);line-height:1.7;margin-bottom:36px;max-width:580px;}
+
+.gen-card{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:16px;padding:28px;
+  box-shadow:0 4px 28px rgba(0,200,150,.09);
+}
+.field-label{font-size:.75rem;font-weight:700;color:var(--brand);letter-spacing:.3px;margin-bottom:7px;display:flex;align-items:center;gap:7px;}
+.field-label::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.jd-input{
+  width:100%;min-height:190px;
+  border:1.5px solid var(--border);border-radius:10px;
+  padding:14px 16px;font-family:'Inter',sans-serif;font-size:.85rem;line-height:1.65;
+  color:var(--text);background:#FAFFFE;resize:vertical;outline:none;
+  transition:border-color .2s;
+}
+.jd-input:focus{border-color:var(--accent);}
+
+.opts{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;}
+.opt{
+  display:flex;align-items:center;gap:7px;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:7px 14px;font-size:.78rem;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:all .2s;user-select:none;
+}
+.opt.on{border-color:var(--accent);color:var(--brand);background:rgba(0,200,150,.07);}
+.opt input{accent-color:var(--accent);}
+
+.gen-actions{display:flex;align-items:center;gap:16px;margin-top:22px;flex-wrap:wrap;}
+.gen-btn{
+  background:var(--brand);color:#fff;border:none;
+  padding:14px 30px;border-radius:10px;
+  font-family:'Inter',sans-serif;font-size:.92rem;font-weight:800;
+  cursor:pointer;display:flex;align-items:center;gap:9px;letter-spacing:.1px;
+  transition:all .2s;
+}
+.gen-btn:hover{background:#0d3060;transform:translateY(-1px);box-shadow:0 6px 20px rgba(10,37,64,.22);}
+.gen-btn:active{transform:none;}
+.gen-hint{font-size:.72rem;color:var(--muted);line-height:1.6;}
+.powered{margin-top:22px;display:flex;align-items:center;gap:9px;font-size:.7rem;color:var(--muted);}
+.powered .hbadge{
+  background:var(--brand);color:var(--accent);
+  font-size:.62rem;font-weight:900;padding:2px 8px;border-radius:4px;letter-spacing:.8px;
+}
+
+/* ── LOADING ── */
+#load-section{display:none;max-width:800px;margin:0 auto;padding:52px 24px;text-align:center;}
+.load-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:44px 36px;box-shadow:var(--shadow);}
+.spinner{width:52px;height:52px;border:4px solid rgba(0,200,150,.18);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 26px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.load-h{font-size:1.15rem;font-weight:800;color:var(--brand);margin-bottom:6px;}
+.load-sub{font-size:.85rem;color:var(--muted);margin-bottom:30px;}
+.steps{text-align:left;max-width:380px;margin:0 auto;}
+.step{display:flex;align-items:center;gap:12px;padding:9px 0;font-size:.85rem;color:var(--muted);border-bottom:1px solid rgba(0,0,0,.04);transition:color .3s;}
+.step:last-child{border:none;}
+.s-icon{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;transition:all .3s;}
+.step.done .s-icon{background:var(--accent);color:var(--brand);}
+.step.active .s-icon{background:var(--brand);color:#fff;animation:pulse .8s ease-in-out infinite alternate;}
+.step.done{color:var(--text);}
+.step.active{color:var(--brand);font-weight:600;}
+@keyframes pulse{from{transform:scale(.94);}to{transform:scale(1.06);}}
+.prog-wrap{margin:26px auto 0;height:5px;background:var(--border);border-radius:3px;overflow:hidden;max-width:380px;}
+.prog-bar{height:100%;background:var(--accent);border-radius:3px;width:0%;transition:width .55s ease;}
+
+/* ── PLAYGROUND NAV ── */
+#pg-section{display:none;}
+.topbar{transition:transform .25s ease;}
+.topbar.gone{transform:translateY(-100%);position:fixed;pointer-events:none;opacity:0;}
+.pg-nav{
+  background:var(--brand);color:#fff;
+  padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  min-height:52px;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+  flex-wrap:wrap;gap:8px;padding-top:6px;padding-bottom:6px;
+}
+.pg-back{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.8);font-size:.72rem;font-weight:700;
+  padding:5px 11px;border-radius:6px;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;white-space:nowrap;
+}
+.pg-back:hover{background:rgba(255,255,255,.2);color:#fff;}
+.pg-nav-id{display:flex;align-items:center;gap:10px;}
+.pg-nav-title{font-size:.88rem;font-weight:700;}
+.pg-nav-sub{font-size:.68rem;color:rgba(255,255,255,.5);}
+.pg-tabs{display:flex;gap:3px;flex-wrap:wrap;}
+.pg-tab{
+  background:transparent;border:none;
+  color:rgba(255,255,255,.6);
+  padding:7px 12px;border-radius:7px;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;
+  transition:all .2s;
+}
+.pg-tab:hover{background:rgba(255,255,255,.1);color:#fff;}
+.pg-tab.active{background:var(--accent);color:var(--brand);}
+
+/* ── PAGES ── */
+.pg-page{display:none;max-width:1100px;margin:0 auto;padding:28px 20px;}
+.pg-page.active{display:block;}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:22px;margin-bottom:18px;box-shadow:var(--shadow);}
+.card-title{font-size:.95rem;font-weight:700;color:var(--brand);margin-bottom:14px;}
+.section-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;}
+
+/* ── OVERVIEW ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px;}
+.stat-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.stat-val{font-size:1.7rem;font-weight:900;color:var(--accent);}
+.stat-lbl{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{padding:4px 12px;border-radius:20px;font-size:.74rem;font-weight:600;}
+.chip-g{background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.28);color:var(--accent2);}
+.chip-a{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);color:var(--amber);}
+.focus-row{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:.84rem;}
+.focus-row:last-child{border:none;}
+.focus-lbl{width:180px;flex-shrink:0;color:var(--muted);}
+.focus-bar-w{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:0 12px;}
+.focus-bar{height:100%;background:var(--accent);border-radius:3px;}
+.focus-pct{font-weight:700;color:var(--brand);font-size:.8rem;}
+
+/* ── ROADMAP ── */
+.rm-row{
+  display:grid;grid-template-columns:30px 1fr auto auto;
+  gap:12px;align-items:center;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:13px 16px;margin-bottom:9px;
+  transition:box-shadow .2s,border-color .2s;
+}
+.rm-row:hover{box-shadow:0 4px 16px rgba(0,200,150,.12);border-color:rgba(0,200,150,.3);}
+.rm-n{width:27px;height:27px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;flex-shrink:0;}
+.rm-topic{font-weight:600;font-size:.88rem;}
+.rm-week{font-size:.72rem;color:var(--muted);}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.66rem;font-weight:800;letter-spacing:.4px;text-transform:uppercase;}
+.bh{background:#FEE2E2;color:var(--red);}
+.bm{background:#FEF3C7;color:var(--amber);}
+.bl{background:#D1FAE5;color:var(--lime);}
+
+/* ── Q&A ── */
+.filter-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.f-btn{border:1.5px solid var(--border);background:var(--card);color:var(--muted);padding:5px 13px;border-radius:20px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;transition:all .2s;}
+.f-btn.active{border-color:var(--accent);background:var(--accent);color:var(--brand);}
+.lvl-row{display:flex;gap:7px;margin-bottom:14px;}
+.lvl-btn{padding:5px 14px;border-radius:20px;border:1.5px solid;cursor:pointer;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;background:transparent;transition:all .2s;}
+.lvl-btn.B{border-color:var(--lime);color:var(--lime);}
+.lvl-btn.B.active{background:var(--lime);color:#fff;}
+.lvl-btn.I{border-color:var(--amber);color:var(--amber);}
+.lvl-btn.I.active{background:var(--amber);color:#fff;}
+.lvl-btn.A{border-color:var(--red);color:var(--red);}
+.lvl-btn.A.active{background:var(--red);color:#fff;}
+.qa-card{border:1px solid var(--border);border-radius:11px;margin-bottom:11px;overflow:hidden;transition:box-shadow .2s;}
+.qa-card:hover{box-shadow:0 3px 14px rgba(0,0,0,.07);}
+.qa-hdr{padding:14px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;background:var(--card);}
+.qa-lvl{padding:2px 9px;border-radius:11px;font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;}
+.qa-lvl.B{background:#D1FAE5;color:#065F46;}
+.qa-lvl.I{background:#FEF3C7;color:#92400E;}
+.qa-lvl.A{background:#FEE2E2;color:#991B1B;}
+.qa-q{font-weight:600;font-size:.85rem;flex:1;}
+.qa-tag{font-size:.68rem;color:var(--muted);white-space:nowrap;}
+.qa-chev{color:var(--muted);transition:transform .3s;font-size:.9rem;}
+.qa-card.open .qa-chev{transform:rotate(180deg);}
+.qa-body{display:none;padding:0 18px 18px;background:var(--card);}
+.qa-card.open .qa-body{display:block;}
+.qa-ans{font-size:.84rem;line-height:1.8;color:#2C2C3E;padding:12px 0 8px;white-space:pre-wrap;}
+.qa-code{background:var(--code-bg);color:var(--code-tx);border-radius:8px;padding:12px 14px;font-family:'Courier New',monospace;font-size:.74rem;line-height:1.6;overflow-x:auto;margin:8px 0;white-space:pre;}
+
+/* ── STRENGTHS GAP ANALYSIS ── */
+.str-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+@media(max-width:540px){.str-summary{grid-template-columns:1fr 1fr;}}
+.str-stat{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.str-stat-n{font-size:2rem;font-weight:900;}
+.str-stat-l{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.str-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:620px){.str-grid{grid-template-columns:1fr;}}
+.str-col-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding-bottom:10px;margin-bottom:10px;border-bottom:2px solid;}
+.str-col-title.green{color:var(--lime);border-color:var(--lime);}
+.str-col-title.amber{color:var(--amber);border-color:var(--amber);}
+.str-col-title.red{color:var(--red);border-color:var(--red);}
+.str-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.04);}
+.str-item:last-child{border:none;}
+.str-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;margin-top:1px;}
+.si-g{background:#D1FAE5;color:#065F46;}
+.si-a{background:#FEF3C7;color:#92400E;}
+.si-r{background:#FEE2E2;color:#991B1B;}
+.str-skill{font-weight:600;font-size:.84rem;}
+.str-note{font-size:.75rem;color:var(--muted);margin-top:2px;}
+.str-tag{display:inline-block;font-size:.65rem;font-weight:700;padding:1px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
+.st-diff{background:rgba(0,200,150,.15);color:var(--accent2);}
+.st-req{background:rgba(10,37,64,.1);color:var(--brand);}
+.overall-bar{margin-top:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 20px;}
+.ob-label{font-size:.8rem;font-weight:600;color:var(--brand);margin-bottom:10px;}
+.ob-track{height:10px;background:var(--border);border-radius:5px;overflow:hidden;position:relative;}
+.ob-fill{height:100%;background:linear-gradient(90deg,var(--red) 0%,var(--amber) 25%,var(--accent) 75%,var(--lime) 100%);border-radius:5px;width:82%;}
+.ob-meta{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:6px;}
+.ob-score{font-size:.85rem;font-weight:800;color:var(--lime);}
+
+/* ── PRACTICE ── */
+.prac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.prac-score{display:flex;gap:12px;}
+.score-chip{display:flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.78rem;font-weight:700;}
+.sc-g{color:var(--lime);}
+.sc-a{color:var(--amber);}
+.sc-r{color:var(--red);}
+.prac-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:28px;margin-bottom:16px;position:relative;}
+.prac-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px;}
+.prac-q-num{font-size:.72rem;font-weight:700;color:var(--muted);}
+.timer-wrap{display:flex;align-items:center;gap:8px;}
+.timer-display{
+  font-size:1.4rem;font-weight:900;color:var(--brand);
+  font-variant-numeric:tabular-nums;letter-spacing:1px;
+  min-width:52px;text-align:center;
+}
+.timer-display.warn{color:var(--amber);}
+.timer-display.urgent{color:var(--red);}
+.timer-btn{
+  background:var(--accent);color:var(--brand);border:none;
+  padding:7px 16px;border-radius:7px;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:.78rem;font-weight:700;transition:all .2s;
+}
+.timer-btn:hover{background:#00e0ac;}
+.timer-btn.stop{background:#FEE2E2;color:var(--red);}
+.prac-question{font-size:1.05rem;font-weight:700;color:var(--brand);line-height:1.5;margin-bottom:8px;}
+.prac-context{font-size:.82rem;color:var(--muted);margin-bottom:22px;padding:10px 14px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent);}
+.self-rate-label{font-size:.76rem;font-weight:600;color:var(--muted);margin-bottom:10px;}
+.rate-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.rate-btn{
+  flex:1;min-width:110px;
+  padding:12px 16px;border-radius:10px;border:1.5px solid var(--border);
+  background:var(--card);cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;
+  text-align:center;transition:all .2s;
+}
+.rate-btn:hover{transform:translateY(-2px);}
+.rate-btn.r-g:hover,.rate-btn.r-g.selected{background:#D1FAE5;border-color:var(--lime);color:#065F46;}
+.rate-btn.r-a:hover,.rate-btn.r-a.selected{background:#FEF3C7;border-color:var(--amber);color:#92400E;}
+.rate-btn.r-r:hover,.rate-btn.r-r.selected{background:#FEE2E2;border-color:var(--red);color:#991B1B;}
+.rate-btn .rb-icon{font-size:1.2rem;margin-bottom:3px;}
+.prac-nav{display:flex;align-items:center;justify-content:space-between;margin-top:20px;}
+.prac-nav-btn{
+  background:var(--bg);border:1.5px solid var(--border);color:var(--brand);
+  padding:9px 20px;border-radius:8px;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;transition:all .2s;
+}
+.prac-nav-btn:hover{background:var(--border);}
+.prac-nav-btn:disabled{opacity:.35;cursor:not-allowed;}
+.prac-nav-btn.next{background:var(--brand);color:#fff;border-color:var(--brand);}
+.prac-nav-btn.next:hover{background:#0d3060;}
+.prac-progress{display:flex;gap:5px;align-items:center;}
+.prac-dot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:all .3s;cursor:pointer;}
+.prac-dot.done-g{background:var(--lime);}
+.prac-dot.done-a{background:var(--amber);}
+.prac-dot.done-r{background:var(--red);}
+.prac-dot.current{background:var(--brand);transform:scale(1.3);}
+.prac-summary{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:32px;text-align:center;display:none;}
+.prac-summary.show{display:block;}
+.sum-title{font-size:1.3rem;font-weight:900;color:var(--brand);margin-bottom:6px;}
+.sum-sub{font-size:.9rem;color:var(--muted);margin-bottom:24px;}
+.sum-bars{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.sum-bar{text-align:center;}
+.sum-val{font-size:2rem;font-weight:900;}
+.sum-lbl{font-size:.72rem;color:var(--muted);margin-top:2px;}
+
+/* ── FLASHCARDS ── */
+.fc-ctrl{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
+.fc-cnt{font-size:.82rem;color:var(--muted);font-weight:600;}
+.fc-btn{border:1.5px solid var(--border);background:var(--card);color:var(--brand);padding:6px 16px;border-radius:7px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;font-size:.78rem;transition:all .2s;}
+.fc-btn:hover{background:var(--bg);}
+.fc-hint{font-size:.72rem;color:var(--muted);}
+.fc-wrap{perspective:1100px;margin-bottom:14px;min-height:200px;}
+.fc-inner{position:relative;width:100%;min-height:200px;transform-style:preserve-3d;transition:transform .5s;cursor:pointer;}
+.fc-inner.flipped{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;min-height:200px;backface-visibility:hidden;border-radius:14px;padding:30px 26px;display:flex;flex-direction:column;justify-content:center;}
+.fc-front{background:var(--brand);color:#fff;}
+.fc-back{background:var(--accent);color:var(--brand);transform:rotateY(180deg);}
+.fc-label{font-size:.65rem;font-weight:800;opacity:.55;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.fc-text{font-size:1.05rem;font-weight:700;line-height:1.55;}
+.fc-flip-hint{font-size:.72rem;margin-top:14px;opacity:.5;}
+.fc-dots{display:flex;gap:6px;justify-content:center;}
+.fc-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s;cursor:pointer;}
+.fc-dot.active{background:var(--brand);}
+
+/* ── B2B CTA ── */
+.b2b-footer{background:var(--brand);color:#fff;padding:52px 24px;text-align:center;margin-top:40px;}
+.b2b-ey{font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:14px;}
+.b2b-h{font-size:1.9rem;font-weight:900;line-height:1.2;margin-bottom:10px;letter-spacing:-.4px;}
+.b2b-p{font-size:.9rem;color:rgba(255,255,255,.65);max-width:500px;margin:0 auto 30px;line-height:1.7;}
+.b2b-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-acc{background:var(--accent);color:var(--brand);font-weight:800;padding:13px 28px;border-radius:9px;text-decoration:none;font-size:.88rem;transition:all .2s;}
+.btn-acc:hover{background:#00e0ac;}
+.btn-out{border:1.5px solid rgba(255,255,255,.28);color:#fff;font-weight:600;padding:13px 28px;border-radius:9px;text-decoration:none;font-size:.88rem;transition:all .2s;}
+.btn-out:hover{border-color:var(--accent);color:var(--accent);}
+.b2b-stats{display:flex;gap:36px;justify-content:center;flex-wrap:wrap;margin-top:36px;padding-top:28px;border-top:1px solid rgba(255,255,255,.1);}
+.b2b-sv{font-size:1.8rem;font-weight:900;color:var(--accent);}
+.b2b-sl{font-size:.74rem;color:rgba(255,255,255,.5);margin-top:3px;}
+
+/* ── FOOTER TAGLINE ── */
+.site-foot{background:#051830;color:rgba(255,255,255,.35);text-align:center;padding:16px 24px;font-size:.72rem;letter-spacing:.3px;}
+.site-foot span{color:var(--accent);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .hero-h{font-size:1.55rem;}
+  .svc-grid{grid-template-columns:1fr !important;}
+  .pg-nav{top:0;}
+  .rm-row{grid-template-columns:27px 1fr;}
+  .rm-week,.badge{display:none;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .str-summary{grid-template-columns:1fr 1fr;}
+  .b2b-h{font-size:1.4rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="tb-left">
+    <div class="hail-logo">HAIL</div>
+    <div>
+      <div class="tb-title">Interview Playground Generator</div>
+      <div class="tb-sub">Human In the AI Loop &nbsp;·&nbsp; AI Assisted, Human Led</div>
+    </div>
+  </div>
+  <a href="mailto:sudheerkumar.gujjeli@hailoop.co.uk?subject=HAIL%20Interview%20Playground%20%E2%80%94%20B2B%20Enquiry" class="tb-cta">Book a Demo →</a>
+</header>
+
+<!-- ══ GENERATOR ══ -->
+<section id="gen-section">
+  <div class="eyebrow">✦ &nbsp;PRE-MVP · PROOF OF CONCEPT</div>
+  <h1 class="hero-h">Paste a JD.<br>Get a <em>personalised interview</em><br>playground in 30 seconds.</h1>
+  <p class="hero-p">HAIL analyses the job description, maps it against your profile, then builds a structured prep playground — roadmap, Q&A bank, strength gap analysis, and mock practice — all tailored to that specific role.</p>
+
+  <div class="gen-card">
+    <div class="field-label">Job Description</div>
+    <textarea class="jd-input" id="jd-input">Senior Full-Stack Engineer – AI & Cloud Platforms
+London, UK | £75,000–£95,000 | Hybrid (3 days on-site)
+
+We are looking for a Senior Full-Stack Engineer to join our growing AI Platform team. You will lead the design and delivery of intelligent, cloud-native enterprise applications.
+
+Key Responsibilities:
+• Architect and deliver scalable full-stack applications using .NET 8, Angular 20, and Azure
+• Design and implement RESTful APIs and integrate with Azure AI services (OpenAI, Document Intelligence, AI Search)
+• Build and maintain Python FastAPI microservices for LLM orchestration and RAG pipelines
+• Lead technical discovery sessions and mentor a team of 4 engineers
+• Champion CI/CD best practices, code quality, and automated testing
+
+Required Skills:
+• .NET 8 / ASP.NET Core — 5+ years
+• Angular 17+ — 4+ years
+• Azure (AKS, Container Apps, Key Vault, Blob, SQL) — 3+ years
+• Python / FastAPI for AI microservices
+• Azure OpenAI / LLM integration
+• Azure AI Search or similar vector/hybrid search
+• SQL Server / Entity Framework Core
+• Docker, Kubernetes basics, Azure DevOps
+
+Nice to Have:
+• Camunda BPM or workflow orchestration
+• Azure Databricks / Data Factory
+• RAG pipeline design
+• LangChain or similar orchestration frameworks
+
+We value engineers who keep humans in the loop and build AI that amplifies expertise, not replaces it.</textarea>
+
+    <div style="margin:20px 0 0;">
+      <div class="field-label" style="margin-bottom:6px;">
+        CV / Resume Highlights
+        <span style="font-size:.68rem;font-weight:500;color:var(--muted);margin-left:6px;">(optional — paste key experience for a personalised Strengths analysis)</span>
+      </div>
+      <textarea class="jd-input" id="cv-input" style="min-height:90px;font-size:.82rem;" placeholder="e.g. 14 years .NET, Angular 20 at Watlow, AKS deployments at Infosys, built WATTY AI chatbot on Azure OpenAI, Camunda BPM expert, led squads of 8 engineers..."></textarea>
+    </div>
+
+    <div class="opts">
+      <label class="opt on" onclick="this.classList.toggle('on')"><input type="checkbox" checked> 📅 Roadmap</label>
+      <label class="opt on" onclick="this.classList.toggle('on')"><input type="checkbox" checked> 💡 Q&amp;A Bank</label>
+      <label class="opt on" onclick="this.classList.toggle('on')"><input type="checkbox" checked> 💪 Strengths Analysis</label>
+      <label class="opt on" onclick="this.classList.toggle('on')"><input type="checkbox" checked> 🎯 Practice Mode</label>
+      <label class="opt on" onclick="this.classList.toggle('on')"><input type="checkbox" checked> 🃏 Flashcards</label>
+    </div>
+
+    <div class="gen-actions">
+      <button class="gen-btn" onclick="startGen()">
+        <span>▶</span> Generate My Playground
+      </button>
+      <div class="gen-hint">Takes ~30 seconds.<br>No signup required for demo.</div>
+    </div>
+
+    <div class="powered">
+      <span class="hbadge">HAIL</span>
+      Powered by Human In the AI Loop &nbsp;·&nbsp; RAG + GPT-4o &nbsp;·&nbsp; PII-safe &nbsp;·&nbsp; Azure-hosted
+    </div>
+  </div>
+</section>
+
+<!-- ══ LOADING ══ -->
+<section id="load-section">
+  <div class="load-card">
+    <div class="spinner"></div>
+    <div class="load-h">Building your playground…</div>
+    <div class="load-sub">Analysing the JD and assembling your personalised prep plan</div>
+    <div class="steps">
+      <div class="step" id="s1"><div class="s-icon" id="i1">1</div><span>Parsing JD &amp; extracting tech stack</span></div>
+      <div class="step" id="s2"><div class="s-icon" id="i2">2</div><span>Identifying key competencies &amp; interview topics</span></div>
+      <div class="step" id="s3"><div class="s-icon" id="i3">3</div><span>Building personalised 8-week roadmap</span></div>
+      <div class="step" id="s4"><div class="s-icon" id="i4">4</div><span>Running strengths gap analysis against your profile</span></div>
+      <div class="step" id="s5"><div class="s-icon" id="i5">5</div><span>Generating Q&amp;A bank &amp; practice questions</span></div>
+      <div class="step" id="s6"><div class="s-icon" id="i6">6</div><span>Assembling flashcards &amp; final playground</span></div>
+    </div>
+    <div class="prog-wrap"><div class="prog-bar" id="prog"></div></div>
+  </div>
+</section>
+
+<!-- ══ PLAYGROUND ══ -->
+<div id="pg-section">
+
+  <nav class="pg-nav">
+    <div class="pg-nav-id">
+      <button class="pg-back" onclick="backToGen()" title="Start over">← New</button>
+      <div>
+        <div class="pg-nav-title">Senior Full-Stack Engineer — AI &amp; Cloud Platforms</div>
+        <div class="pg-nav-sub">London · £75k–£95k · Generated by HAIL</div>
+      </div>
+    </div>
+    <div class="pg-tabs">
+      <button class="pg-tab active" onclick="showPg('ov',this)">📊 Overview</button>
+      <button class="pg-tab" onclick="showPg('rm',this)">🗺️ Roadmap</button>
+      <button class="pg-tab" onclick="showPg('qa',this)">💡 Q&amp;A</button>
+      <button class="pg-tab" onclick="showPg('str',this)">💪 Strengths</button>
+      <button class="pg-tab" onclick="showPg('prac',this)">🎯 Practice</button>
+      <button class="pg-tab" onclick="showPg('fc',this)">🃏 Flashcards</button>
+    </div>
+  </nav>
+
+  <!-- OVERVIEW -->
+  <div class="pg-page active" id="pg-ov">
+    <div class="card">
+      <div class="card-title">Role at a Glance</div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-val">8</div><div class="stat-lbl">Weeks prep recommended</div></div>
+        <div class="stat-box"><div class="stat-val">30</div><div class="stat-lbl">Q&amp;A questions generated</div></div>
+        <div class="stat-box"><div class="stat-val">7</div><div class="stat-lbl">Core tech domains</div></div>
+        <div class="stat-box"><div class="stat-val">82%</div><div class="stat-lbl">Profile match score</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Must-Have Skills Detected</div>
+      <div class="chips">
+        <span class="chip chip-g">.NET 8</span><span class="chip chip-g">Angular 20</span>
+        <span class="chip chip-g">Azure AKS</span><span class="chip chip-g">Python / FastAPI</span>
+        <span class="chip chip-g">Azure OpenAI</span><span class="chip chip-g">Azure AI Search</span>
+        <span class="chip chip-g">SQL Server / EF Core</span><span class="chip chip-g">Docker / Azure DevOps</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Nice-to-Have (Differentiators)</div>
+      <div class="chips">
+        <span class="chip chip-a">Camunda BPM</span><span class="chip chip-a">Azure Databricks</span>
+        <span class="chip chip-a">RAG Pipeline Design</span><span class="chip chip-a">LangChain</span>
+        <span class="chip chip-a">Data Factory</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Interview Focus Distribution</div>
+      <div class="focus-row"><span class="focus-lbl">.NET 8 &amp; Architecture</span><div class="focus-bar-w"><div class="focus-bar" style="width:90%"></div></div><span class="focus-pct">90%</span></div>
+      <div class="focus-row"><span class="focus-lbl">Azure AI &amp; Cloud</span><div class="focus-bar-w"><div class="focus-bar" style="width:85%"></div></div><span class="focus-pct">85%</span></div>
+      <div class="focus-row"><span class="focus-lbl">Angular 20 Frontend</span><div class="focus-bar-w"><div class="focus-bar" style="width:75%"></div></div><span class="focus-pct">75%</span></div>
+      <div class="focus-row"><span class="focus-lbl">Python / FastAPI / LLM</span><div class="focus-bar-w"><div class="focus-bar" style="width:70%"></div></div><span class="focus-pct">70%</span></div>
+      <div class="focus-row"><span class="focus-lbl">System Design &amp; Leadership</span><div class="focus-bar-w"><div class="focus-bar" style="width:60%"></div></div><span class="focus-pct">60%</span></div>
+      <div class="focus-row"><span class="focus-lbl">RAG &amp; Orchestration</span><div class="focus-bar-w"><div class="focus-bar" style="width:50%"></div></div><span class="focus-pct">50%</span></div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="pg-page" id="pg-rm">
+    <div class="card">
+      <div class="card-title">8-Week Interview Preparation Roadmap</div>
+      <div class="rm-row"><div class="rm-n">1</div><div><div class="rm-topic">.NET 8 Core — Minimal APIs, DI, Middleware, Native AOT</div><div class="rm-week">Week 1 · ~12h</div></div><span class="badge bh">Critical</span></div>
+      <div class="rm-row"><div class="rm-n">2</div><div><div class="rm-topic">Azure Cloud — AKS, Container Apps, Key Vault, Managed Identity</div><div class="rm-week">Week 2 · ~10h</div></div><span class="badge bh">Critical</span></div>
+      <div class="rm-row"><div class="rm-n">3</div><div><div class="rm-topic">Angular 20 — Signals, Standalone Components, RxJS patterns</div><div class="rm-week">Week 3 · ~10h</div></div><span class="badge bh">Critical</span></div>
+      <div class="rm-row"><div class="rm-n">4</div><div><div class="rm-topic">Azure AI Services — OpenAI, Document Intelligence, AI Search</div><div class="rm-week">Week 4 · ~12h</div></div><span class="badge bh">Critical</span></div>
+      <div class="rm-row"><div class="rm-n">5</div><div><div class="rm-topic">Python FastAPI — Async, Pydantic models, LLM integration patterns</div><div class="rm-week">Week 5 · ~8h</div></div><span class="badge bm">High</span></div>
+      <div class="rm-row"><div class="rm-n">6</div><div><div class="rm-topic">RAG Pipeline — Chunking, Embedding, Hybrid Retrieval, Re-rank</div><div class="rm-week">Week 6 · ~8h</div></div><span class="badge bm">High</span></div>
+      <div class="rm-row"><div class="rm-n">7</div><div><div class="rm-topic">System Design — Multi-tenant SaaS, Event-driven, CQRS patterns</div><div class="rm-week">Week 7 · ~8h</div></div><span class="badge bm">High</span></div>
+      <div class="rm-row"><div class="rm-n">8</div><div><div class="rm-topic">Leadership &amp; Behavioural — STAR method, Mentoring, Stakeholder</div><div class="rm-week">Week 8 · ~6h</div></div><span class="badge bl">Standard</span></div>
+    </div>
+  </div>
+
+  <!-- Q&A -->
+  <div class="pg-page" id="pg-qa">
+    <div class="filter-row" id="tf">
+      <button class="f-btn active" onclick="fTopic('all',this)">All Topics</button>
+      <button class="f-btn" onclick="fTopic('.net',this)">.NET</button>
+      <button class="f-btn" onclick="fTopic('azure',this)">Azure</button>
+      <button class="f-btn" onclick="fTopic('angular',this)">Angular</button>
+      <button class="f-btn" onclick="fTopic('ai',this)">AI / RAG</button>
+      <button class="f-btn" onclick="fTopic('design',this)">System Design</button>
+    </div>
+    <div class="lvl-row">
+      <button class="lvl-btn B active" onclick="fLvl('B',this)">Beginner</button>
+      <button class="lvl-btn I active" onclick="fLvl('I',this)">Intermediate</button>
+      <button class="lvl-btn A active" onclick="fLvl('A',this)">Advanced</button>
+    </div>
+    <div id="qalist">
+      <div class="qa-card" data-topic=".net" data-level="B">
+        <div class="qa-hdr" onclick="toggleQ(this)">
+          <span class="qa-lvl B">Beginner</span><span class="qa-q">What are the key differences between .NET 8 and previous versions?</span><span class="qa-tag">.NET</span><span class="qa-chev">▼</span>
+        </div>
+        <div class="qa-body"><div class="qa-ans">.NET 8 (LTS) introduces several significant improvements:
+
+• Native AOT (Ahead-of-Time compilation) — produces small, fast, self-contained executables with no JIT overhead, ideal for containers and microservices.
+• Improved performance — faster JSON serialisation (System.Text.Json), SIMD optimisations, and reduced memory allocations throughout the runtime.
+• Minimal APIs matured — full middleware pipeline support, OpenAPI, and route groups eliminate most of the boilerplate from traditional controllers.
+• Keyed DI services — register multiple implementations of the same interface by name/key.
+• Primary constructors — now available for all classes, reducing ceremony in service classes.
+
+In contrast to .NET 6 (previous LTS), .NET 8 is notably faster on benchmarks, has smaller deployment footprints via Native AOT, and has a much richer Minimal API story.</div></div>
+      </div>
+
+      <div class="qa-card" data-topic="azure" data-level="B">
+        <div class="qa-hdr" onclick="toggleQ(this)">
+          <span class="qa-lvl B">Beginner</span><span class="qa-q">Azure Container Apps vs AKS — when would you choose each?</span><span class="qa-tag">Azure</span><span class="qa-chev">▼</span>
+        </div>
+        <div class="qa-body"><div class="qa-ans">Azure Container Apps (ACA):
+• Managed serverless platform — no cluster to manage. Built on Kubernetes under the hood.
+• Native KEDA scaling, Dapr integration, revision-based deployments, true scale-to-zero.
+• Ideal for: microservices, APIs, startups, small teams — fast to production.
+
+Azure Kubernetes Service (AKS):
+• Full managed Kubernetes cluster — you control nodes, networking, RBAC, every K8s resource.
+• More operational overhead but maximum control and flexibility.
+• Ideal for: complex multi-tier platforms, enterprises with K8s expertise.
+
+Rule of thumb: Start with Container Apps. Migrate to AKS when you hit ACA's limits or need fine-grained K8s control (custom node pools, specific networking, StatefulSets).</div></div>
+      </div>
+
+      <div class="qa-card" data-topic="angular" data-level="I">
+        <div class="qa-hdr" onclick="toggleQ(this)">
+          <span class="qa-lvl I">Intermediate</span><span class="qa-q">How do Angular 20 Signals differ from RxJS Observables?</span><span class="qa-tag">Angular</span><span class="qa-chev">▼</span>
+        </div>
+        <div class="qa-body"><div class="qa-ans">Signals (stable from Angular 17, matured in 18–20) are synchronous reactive primitives. Observables are asynchronous streams.
+
+Signals:
+• Synchronous — value always available immediately, no subscription needed.
+• Auto-tracked — templates and computed() automatically re-run when a signal they read changes.
+• No unsubscribe — no memory leak risk, no takeUntil patterns.
+• Best for: component state, derived values, simple template binding.
+
+RxJS Observables:
+• Asynchronous — model streams of events over time.
+• Rich operators: switchMap, debounceTime, combineLatest for complex async flows.
+• Best for: HTTP calls, WebSockets, debounced user input, multi-source data.
+
+Use toSignal() to bridge them — convert an Observable into a Signal for template binding while keeping stream logic in the service layer.</div></div>
+      </div>
+
+      <div class="qa-card" data-topic="ai" data-level="I">
+        <div class="qa-hdr" onclick="toggleQ(this)">
+          <span class="qa-lvl I">Intermediate</span><span class="qa-q">Walk me through designing a RAG pipeline using Azure AI Search and Azure OpenAI.</span><span class="qa-tag">AI / RAG</span><span class="qa-chev">▼</span>
+        </div>
+        <div class="qa-body">
+          <div class="qa-ans">INGESTION:
+1. Extract — Azure Document Intelligence processes PDFs, Word docs into structured text with layout preservation.
+2. Chunk — Split into overlapping chunks (~500 tokens, 10% overlap) to preserve context across boundaries.
+3. Embed — Call Azure OpenAI text-embedding-3-small for each chunk; store vectors.
+4. Index — Upsert chunks + vectors into Azure AI Search with both keyword (BM25) and vector fields.
+
+RETRIEVAL:
+1. Embed the user query with the same embedding model.
+2. Hybrid search — run BM25 keyword AND vector similarity in parallel.
+3. Reciprocal Rank Fusion (RRF) — merges both result sets, boosting results ranking well in both.
+4. Re-rank — cross-encoder on top-N results for semantic precision.
+5. Augment — inject top-K chunks into GPT-4o prompt as context.
+6. Generate — structured output returns a grounded, cited response.
+
+Key considerations: chunk size tuning, embedding model consistency, conditional LLM calls (skip if cached answer exists), PII scrubbing before ingestion.</div>
+          <div class="qa-code">var options = new SearchOptions {
+  VectorSearch = new VectorSearchOptions {
+    Queries = { new VectorizedQuery(queryEmbedding) {
+      KNearestNeighborsCount = 10, Fields = { "contentVector" }
+    }}
+  },
+  QueryType = SearchQueryType.Semantic
+};
+var results = await searchClient.SearchAsync&lt;Doc&gt;(userQuery, options);</div>
+        </div>
+      </div>
+
+      <div class="qa-card" data-topic="design" data-level="A">
+        <div class="qa-hdr" onclick="toggleQ(this)">
+          <span class="qa-lvl A">Advanced</span><span class="qa-q">Design a multi-tenant SaaS platform on Azure with data isolation and cost-per-tenant metering.</span><span class="qa-tag">System Design</span><span class="qa-chev">▼</span>
+        </div>
+        <div class="qa-body"><div class="qa-ans">ISOLATION MODELS:
+• Shared schema — single DB, TenantId on every table, Row-Level Security. Cheapest. Good for SMB.
+• Per-tenant database — separate Azure SQL per tenant on shared logical server. Strong isolation, GDPR-friendly.
+• Silo — dedicated infrastructure per tenant. Max isolation for enterprise.
+
+Recommended hybrid: Free/Pro → shared schema with RLS. Enterprise → dedicated database + dedicated Container Apps environment.
+
+METERING ARCHITECTURE:
+1. Azure API Management — captures per-request metadata (tenantId, token count) via policy.
+2. APIM emits events to Azure Event Hub per request.
+3. Azure Function consumes Event Hub → writes usage records to SQL.
+4. Durable Functions rolls up daily → monthly → Stripe for usage-based billing.
+
+TENANT CONTEXT:
+• JWT claim or API key carries tenantId. Middleware resolves TenantContext at request entry.
+• ITenantContext injected into all services — never pass tenantId through method params manually.</div></div>
+      </div>
+
+      <div class="qa-card" data-topic="ai" data-level="A">
+        <div class="qa-hdr" onclick="toggleQ(this)">
+          <span class="qa-lvl A">Advanced</span><span class="qa-q">How would you implement a PII-safe LLM pipeline where no user data leaves your boundary unredacted?</span><span class="qa-tag">AI / RAG</span><span class="qa-chev">▼</span>
+        </div>
+        <div class="qa-body"><div class="qa-ans">DETECTION:
+• Azure AI Language — built-in PII entity recognition (names, NI numbers, DOBs, emails, addresses).
+• Microsoft Presidio (open-source) — customisable recogniser for domain-specific PII.
+• Run on all user-submitted text before any downstream call.
+
+REDACTION STRATEGY:
+1. Detect entities with confidence threshold (>0.85).
+2. Replace with typed tokens: "John Smith" → "[PERSON_1]", "NW1 6XE" → "[POSTCODE_1]".
+3. Store token map in Redis (TTL = session lifetime) keyed to request ID.
+4. Send redacted text to LLM.
+5. Reverse-substitute tokens in response if echoed back.
+
+ARCHITECTURE:
+Request → PII Scrubber → Token Store (Redis) → LLM Call (GPT-4o) → De-tokenise → Response
+
+GOVERNANCE:
+• Audit log every scrub action (entity type, not value) to Azure Monitor.
+• APIM policy blocks requests if scrubber errors.
+• Never log raw user input — only redacted form.
+• LLM API key in Key Vault, accessed via Managed Identity only.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRENGTHS -->
+  <div class="pg-page" id="pg-str">
+    <div class="card">
+      <div class="card-title">Strengths &amp; Gap Analysis — Your Profile vs This JD</div>
+      <div class="str-summary">
+        <div class="str-stat"><div class="str-stat-n" style="color:var(--lime)">9</div><div class="str-stat-l">Strong matches</div></div>
+        <div class="str-stat"><div class="str-stat-n" style="color:var(--amber)">3</div><div class="str-stat-l">Partial / developing</div></div>
+        <div class="str-stat"><div class="str-stat-n" style="color:var(--red)">1</div><div class="str-stat-l">Gaps to address</div></div>
+      </div>
+      <div class="overall-bar">
+        <div class="ob-label">Overall profile match against JD requirements</div>
+        <div class="ob-track"><div class="ob-fill"></div></div>
+        <div class="ob-meta"><span>0%</span><span class="ob-score">82% — Strong candidate</span><span>100%</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="str-grid">
+        <div>
+          <div class="str-col-title green">✓ Strong Matches (Required)</div>
+          <div class="str-item"><div class="str-icon si-g">✓</div><div><div class="str-skill">.NET 8 / ASP.NET Core<span class="str-tag st-req">Required 5yr+</span></div><div class="str-note">14+ years .NET, current lead at Watlow — Expert level</div></div></div>
+          <div class="str-item"><div class="str-icon si-g">✓</div><div><div class="str-skill">Angular 20<span class="str-tag st-req">Required 4yr+</span></div><div class="str-note">Current tech stack at Watlow, Angular 20 in production</div></div></div>
+          <div class="str-item"><div class="str-icon si-g">✓</div><div><div class="str-skill">Azure AKS / Cloud<span class="str-tag st-req">Required 3yr+</span></div><div class="str-note">AKS deployments at Infosys + Watlow, Azure DevOps pipelines</div></div></div>
+          <div class="str-item"><div class="str-icon si-g">✓</div><div><div class="str-skill">Azure OpenAI / LLM Integration<span class="str-tag st-req">Required</span></div><div class="str-note">Built WATTY AI chatbot, Azure AI Machine Translation at Watlow</div></div></div>
+          <div class="str-item"><div class="str-icon si-g">✓</div><div><div class="str-skill">SQL Server / Entity Framework Core<span class="str-tag st-req">Required</span></div><div class="str-note">14+ years SQL Server, EF Core across multiple enterprise projects</div></div></div>
+          <div class="str-item"><div class="str-icon si-g">✓</div><div><div class="str-skill">Docker / Azure DevOps / CI-CD<span class="str-tag st-req">Required</span></div><div class="str-note">SonarQube quality gates, 80% faster deployments — Infosys</div></div></div>
+        </div>
+        <div>
+          <div class="str-col-title green">✦ Differentiators (Nice-to-Have)</div>
+          <div class="str-item"><div class="str-icon si-g">✦</div><div><div class="str-skill">Camunda BPM<span class="str-tag st-diff">Differentiator</span></div><div class="str-note">Expert — Led TalkTalk SOM2 with TM Forum APIs + Camunda workflows</div></div></div>
+          <div class="str-item"><div class="str-icon si-g">✦</div><div><div class="str-skill">RAG Pipeline Design<span class="str-tag st-diff">Differentiator</span></div><div class="str-note">Actively building RAG systems — current HAIL research focus</div></div></div>
+          <div class="str-item"><div class="str-icon si-g">✦</div><div><div class="str-skill">Team Leadership / Mentoring<span class="str-tag st-diff">Differentiator</span></div><div class="str-note">Led 2 squads (8 engineers) at Infosys, R.E.A.P Award for mentoring</div></div></div>
+
+          <div class="str-col-title amber" style="margin-top:18px;">~ Developing</div>
+          <div class="str-item"><div class="str-icon si-a">~</div><div><div class="str-skill">Python / FastAPI</div><div class="str-note">Used for AI microservices at Watlow — solid but not primary stack</div></div></div>
+          <div class="str-item"><div class="str-icon si-a">~</div><div><div class="str-skill">Azure AI Search</div><div class="str-note">Implementing in current HAIL project — newer area, good direction</div></div></div>
+          <div class="str-item"><div class="str-icon si-a">~</div><div><div class="str-skill">Azure Databricks</div><div class="str-note">Aware of but limited hands-on — nice-to-have only</div></div></div>
+
+          <div class="str-col-title red" style="margin-top:18px;">○ Address Before Interview</div>
+          <div class="str-item"><div class="str-icon si-r">○</div><div><div class="str-skill">LangChain / Orchestration Frameworks</div><div class="str-note">Mentioned as nice-to-have. Spend 4h on LangChain LCEL basics — quick win.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div class="pg-page" id="pg-prac">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="prac-header">
+        <div>
+          <div class="card-title" style="margin:0 0 4px">🎯 Mock Interview Practice</div>
+          <div style="font-size:.78rem;color:var(--muted);">2 minutes per question · Self-rate after each · Track your readiness</div>
+        </div>
+        <div class="prac-score">
+          <div class="score-chip sc-g">✅ <span id="sc-g">0</span> Nailed it</div>
+          <div class="score-chip sc-a">🟡 <span id="sc-a">0</span> Almost</div>
+          <div class="score-chip sc-r">🔴 <span id="sc-r">0</span> Need work</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="prac-q-wrap">
+      <div class="prac-card" id="prac-card">
+        <div class="prac-meta">
+          <div class="prac-q-num" id="prac-qnum">Question 1 of 5</div>
+          <div class="timer-wrap">
+            <div class="timer-display" id="timer">2:00</div>
+            <button class="timer-btn" id="timer-btn" onclick="toggleTimer()">▶ Start</button>
+          </div>
+        </div>
+        <div class="prac-question" id="prac-q"></div>
+        <div class="prac-context" id="prac-ctx"></div>
+        <div class="self-rate-label">How did you do? Rate yourself honestly:</div>
+        <div class="rate-btns">
+          <button class="rate-btn r-g" onclick="rate('g')"><div class="rb-icon">✅</div>Nailed it</button>
+          <button class="rate-btn r-a" onclick="rate('a')"><div class="rb-icon">🟡</div>Getting there</button>
+          <button class="rate-btn r-r" onclick="rate('r')"><div class="rb-icon">🔴</div>Need more work</button>
+        </div>
+        <div class="prac-nav">
+          <button class="prac-nav-btn" id="prev-btn" onclick="prevQ()" disabled>← Previous</button>
+          <div class="prac-progress" id="prac-dots"></div>
+          <button class="prac-nav-btn next" id="next-btn" onclick="nextQ()">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="prac-summary" id="prac-sum">
+      <div style="font-size:2.5rem;margin-bottom:12px;">🎉</div>
+      <div class="sum-title">Practice Round Complete!</div>
+      <div class="sum-sub">Here's how you did across 5 questions</div>
+      <div class="sum-bars">
+        <div class="sum-bar"><div class="sum-val" id="sum-g" style="color:var(--lime)">0</div><div class="sum-lbl">Nailed it</div></div>
+        <div class="sum-bar"><div class="sum-val" id="sum-a" style="color:var(--amber)">0</div><div class="sum-lbl">Getting there</div></div>
+        <div class="sum-bar"><div class="sum-val" id="sum-r" style="color:var(--red)">0</div><div class="sum-lbl">Need work</div></div>
+      </div>
+      <button class="gen-btn" style="margin:24px auto 0;display:flex;" onclick="resetPrac()">↺ Practice Again</button>
+    </div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="pg-page" id="pg-fc">
+    <div class="card">
+      <div class="card-title">Flashcard Drill — Key Concepts</div>
+      <div class="fc-ctrl">
+        <span class="fc-cnt" id="fc-cnt">Card 1 of 6</span>
+        <button class="fc-btn" onclick="prevFC()">← Prev</button>
+        <button class="fc-btn" onclick="nextFC()">Next →</button>
+        <span class="fc-hint">Click card to flip</span>
+      </div>
+      <div class="fc-wrap">
+        <div class="fc-inner" id="fc-inner" onclick="flipFC()">
+          <div class="fc-face fc-front"><div class="fc-label">Question</div><div class="fc-text" id="fc-q"></div><div class="fc-flip-hint">Click to reveal answer →</div></div>
+          <div class="fc-face fc-back"><div class="fc-label">Answer</div><div class="fc-text" id="fc-a" style="font-size:.88rem;font-weight:600;line-height:1.6;"></div></div>
+        </div>
+      </div>
+      <div class="fc-dots" id="fc-dots"></div>
+    </div>
+  </div>
+
+  <!-- HAIL TUTORING SERVICES SECTION -->
+  <div style="background:var(--card);border-top:2px solid var(--border);padding:48px 24px 44px;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:32px;">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.28);color:var(--accent2);font-size:.72rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:14px;">✦ &nbsp;HAIL SERVICES</div>
+        <div style="font-size:1.55rem;font-weight:900;color:var(--brand);letter-spacing:-.4px;margin-bottom:8px;">Two ways HAIL helps you level up</div>
+        <div style="font-size:.9rem;color:var(--muted);max-width:520px;margin:0 auto;">Interview prep and structured skill-building — both AI-assisted, always human-led.</div>
+      </div>
+      <div class="svc-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+        <!-- Card 1: Playground Generator (current tool) -->
+        <div style="background:var(--brand);border-radius:14px;padding:26px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:rgba(0,200,150,.08);border-radius:50%;transform:translate(30px,-30px);"></div>
+          <div style="font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:10px;">Interview Prep</div>
+          <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:8px;line-height:1.3;">Interview Playground<br>Generator</div>
+          <div style="font-size:.8rem;color:rgba(255,255,255,.65);line-height:1.6;margin-bottom:18px;">Paste a JD. Get a personalised playground in 30 seconds — roadmap, Q&amp;A bank, strengths gap analysis, mock practice, and flashcards.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;">
+            <span style="background:rgba(0,200,150,.15);border:1px solid rgba(0,200,150,.3);color:var(--accent);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;">JD-tailored</span>
+            <span style="background:rgba(0,200,150,.15);border:1px solid rgba(0,200,150,.3);color:var(--accent);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;">30 seconds</span>
+            <span style="background:rgba(0,200,150,.15);border:1px solid rgba(0,200,150,.3);color:var(--accent);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;">PII-safe</span>
+          </div>
+          <div style="background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.25);color:var(--accent);font-size:.78rem;font-weight:700;padding:8px 14px;border-radius:8px;text-align:center;">✓ You are here — scroll up to generate</div>
+        </div>
+
+        <!-- Card 2: HAIL Tutoring -->
+        <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:26px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:rgba(10,37,64,.04);border-radius:50%;transform:translate(30px,-30px);"></div>
+          <div style="font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--accent2);margin-bottom:10px;">Skill Building</div>
+          <div style="font-size:1.15rem;font-weight:800;color:var(--brand);margin-bottom:8px;line-height:1.3;">HAIL Tutoring<br>Roadmap</div>
+          <div style="font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:16px;">Structured 10–12 session learning tracks for engineers — AI Engineer or Cloud &amp; Platform Architect. Beginner to Specialist. First session free.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;">
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+              <div style="font-size:.7rem;font-weight:800;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">AI Engineer</div>
+              <div style="font-size:.76rem;color:var(--text);">Beginner → Specialist</div>
+              <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">FastAPI · RAG · LangGraph</div>
+            </div>
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+              <div style="font-size:.7rem;font-weight:800;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Cloud Architect</div>
+              <div style="font-size:.76rem;color:var(--text);">Beginner → Specialist</div>
+              <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">.NET · Azure · AKS</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <a href="survey.html" target="_blank" style="flex:1;background:var(--brand);color:#fff;font-weight:800;font-size:.82rem;padding:11px 18px;border-radius:8px;text-decoration:none;text-align:center;transition:background .2s;white-space:nowrap;">Find My Programme →</a>
+            <div style="font-size:.72rem;color:var(--muted);text-align:right;line-height:1.5;">🎁 First session<br>free for new clients</div>
+          </div>
+        </div>
+
+      </div><!-- end grid -->
+    </div>
+  </div>
+
+  <!-- B2B CTA FOOTER -->
+  <div class="b2b-footer">
+    <div class="b2b-ey">🤝 HAIL for Recruitment &amp; Outplacement</div>
+    <div class="b2b-h">Want this for your candidates?</div>
+    <div class="b2b-p">We generate personalised interview playgrounds at scale — branded under your agency. Paste a candidate's CV + JD, get a structured prep pack in 30 seconds. Free pilot for 2–3 UK agencies.</div>
+    <div class="b2b-btns">
+      <a href="mailto:sudheerkumar.gujjeli@hailoop.co.uk?subject=HAIL%20B2B%20%E2%80%94%20Interview%20Playground%20Pilot&body=Hi%20Sudheer%2C%0A%0AI%20saw%20the%20HAIL%20Interview%20Playground%20demo%20and%20I%E2%80%99m%20interested%20in%20a%20pilot%20for%20our%20agency.%0A%0ACompany%3A%20%0AUse%20case%3A%20%0ACandidates%20per%20month%3A%20%0A%0AThanks" class="btn-acc">📧 Book a B2B Demo</a>
+      <a href="https://www.linkedin.com/in/sudheerkumargujjeli/" target="_blank" class="btn-out">Connect on LinkedIn</a>
+    </div>
+    <div class="b2b-stats">
+      <div><div class="b2b-sv">30s</div><div class="b2b-sl">Playground generated</div></div>
+      <div><div class="b2b-sv">6</div><div class="b2b-sl">Sections per playground</div></div>
+      <div><div class="b2b-sv">0</div><div class="b2b-sl">PII exposed to LLM</div></div>
+      <div><div class="b2b-sv">Free</div><div class="b2b-sl">Pilot for agencies</div></div>
+    </div>
+  </div>
+
+</div><!-- end pg-section -->
+
+<footer class="site-foot">
+  © 2026 Sudheerkumar Gujjeli · Founder, <span>HAIL — Human In the AI Loop</span> · AI Assisted, Human Led.
+</footer>
+
+<script>
+/* ── PRACTICE DATA ── */
+const pqs = [
+  { q:"What is Native AOT in .NET 8 and when should you use it?", ctx:"Focus: performance benefits, startup time, container size, trade-offs with reflection-heavy code.", lvl:"B" },
+  { q:"Explain the difference between Azure Container Apps and AKS. Which would you recommend for a new microservice API at scale?", ctx:"Cover: abstraction level, KEDA scaling, operational overhead, migration path.", lvl:"B" },
+  { q:"Walk me through designing a RAG pipeline using Azure AI Search and Azure OpenAI. What are the key design decisions?", ctx:"Cover: ingestion flow, hybrid search, re-ranking, conditional LLM calls, PII handling.", lvl:"I" },
+  { q:"Design a multi-tenant SaaS platform where Enterprise customers need full data isolation but Free tier users share infrastructure. How do you handle both?", ctx:"Cover: isolation models (shared schema vs per-DB), Managed Identity, Row-Level Security, cost metering.", lvl:"A" },
+  { q:"Tell me about a time you led a technically complex delivery under stakeholder pressure. What did you do differently?", ctx:"Use STAR format. Draw on TalkTalk SOM2 or NextGen EPM. Show technical leadership + communication.", lvl:"I" }
+];
+const fcards = [
+  { q:"What is KEDA and how does it integrate with AKS?", a:"KEDA (Kubernetes Event-Driven Autoscaler) scales pods based on external event metrics — queue length, Service Bus messages, HTTP traffic — not just CPU/memory. It can scale to zero. Built natively into Azure Container Apps, available as add-on for AKS." },
+  { q:"Explain Reciprocal Rank Fusion (RRF) in Azure AI Search.", a:"RRF merges results from BM25 keyword search and vector similarity search. Each result gets a score of 1/(rank+k) from each list. Scores are summed — items ranking well in BOTH lists score highest. This is Azure AI Search's default hybrid search fusion method." },
+  { q:"What is a Signal in Angular 20 vs BehaviorSubject?", a:"Signal: synchronous, always-available reactive value. Auto-tracks consumers. No subscribe/unsubscribe. Use for component state. BehaviorSubject: async Observable stream. Requires subscription management. Use for HTTP calls, WebSockets, debounced events. Use toSignal() to bridge them." },
+  { q:"What is Managed Identity and why prefer it over connection strings?", a:"Managed Identity gives an Azure resource (AKS pod, App Service) an Azure AD identity. Other services authenticate this identity via RBAC — no secrets stored anywhere. Eliminates secret rotation risk. Always prefer Managed Identity over credentials in config or Key Vault references." },
+  { q:"What does structured output in GPT-4o give you?", a:"It forces GPT-4o to return JSON matching an exact schema you define — no hallucinated field names, no missing keys, no extra text. Critical for machine-consumed LLM responses in .NET where you deserialise directly into typed classes. Use response_format: json_schema." },
+  { q:"What is the difference between .AddTransient(), .AddScoped(), and .AddSingleton() in .NET DI?", a:"Transient: new instance every time it's requested. Scoped: one instance per HTTP request (shared within the request). Singleton: one instance for the lifetime of the application. Rule: use Scoped for DB contexts, Singleton for stateless services, Transient for lightweight stateful helpers." }
+];
+
+/* ── STATE ── */
+let actTopic='all', actLvl=new Set(['B','I','A']);
+let curFC=0, curQ=0, timerInt=null, timerSec=120, timerRunning=false;
+let ratings={}, scores={g:0,a:0,r:0};
+let fcInit=false;
+
+/* ── BACK / RESET ── */
+function backToGen(){
+  stopTimer();
+  document.getElementById('pg-section').style.display='none';
+  document.getElementById('gen-section').style.display='block';
+  document.querySelector('.topbar').classList.remove('gone');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── GENERATION ── */
+function startGen(){
+  const v=document.getElementById('jd-input').value.trim();
+  if(v.length<20){alert('Please paste a job description first.');return;}
+  document.querySelector('.topbar').classList.add('gone');
+  document.getElementById('gen-section').style.display='none';
+  document.getElementById('load-section').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  const steps=[
+    {s:'s1',i:'i1',p:17,d:0},{s:'s2',i:'i2',p:34,d:1200},
+    {s:'s3',i:'i3',p:50,d:2400},{s:'s4',i:'i4',p:67,d:3600},
+    {s:'s5',i:'i5',p:84,d:4800},{s:'s6',i:'i6',p:96,d:6000}
+  ];
+  const bar=document.getElementById('prog');
+  steps.forEach((st,idx)=>{
+    setTimeout(()=>{
+      if(idx>0){const p=steps[idx-1];document.getElementById(p.s).classList.replace('active','done');document.getElementById(p.i).textContent='✓';}
+      document.getElementById(st.s).classList.add('active');
+      bar.style.width=st.p+'%';
+    },st.d);
+  });
+  setTimeout(()=>{
+    document.getElementById(steps[steps.length-1].s).classList.replace('active','done');
+    document.getElementById(steps[steps.length-1].i).textContent='✓';
+    bar.style.width='100%';
+  },7200);
+  setTimeout(()=>{
+    document.getElementById('load-section').style.display='none';
+    document.getElementById('pg-section').style.display='block';
+    if(!fcInit){initFC();initPrac();fcInit=true;}
+    window.scrollTo({top:0,behavior:'smooth'});
+  },8000);
+}
+
+/* ── NAV ── */
+function showPg(id,btn){
+  document.querySelectorAll('.pg-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.pg-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── Q&A ── */
+function toggleQ(hdr){hdr.parentElement.classList.toggle('open');}
+function fTopic(t,btn){
+  actTopic=t;
+  document.querySelectorAll('#tf .f-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');applyF();
+}
+function fLvl(l,btn){
+  actLvl.has(l)?(actLvl.size>1&&(actLvl.delete(l),btn.classList.remove('active'))):(actLvl.add(l),btn.classList.add('active'));
+  applyF();
+}
+function applyF(){
+  document.querySelectorAll('.qa-card').forEach(c=>{
+    c.style.display=(actTopic==='all'||c.dataset.topic===actTopic)&&actLvl.has(c.dataset.level)?'block':'none';
+  });
+}
+
+/* ── FLASHCARDS ── */
+function initFC(){
+  const d=document.getElementById('fc-dots');
+  d.innerHTML=fcards.map((_,i)=>`<div class="fc-dot${i===0?' active':''}" onclick="goFC(${i})"></div>`).join('');
+  renderFC();
+}
+function renderFC(){
+  document.getElementById('fc-q').textContent=fcards[curFC].q;
+  document.getElementById('fc-a').textContent=fcards[curFC].a;
+  document.getElementById('fc-inner').classList.remove('flipped');
+  document.getElementById('fc-cnt').textContent=`Card ${curFC+1} of ${fcards.length}`;
+  document.querySelectorAll('.fc-dot').forEach((d,i)=>d.classList.toggle('active',i===curFC));
+}
+function flipFC(){document.getElementById('fc-inner').classList.toggle('flipped');}
+function nextFC(){curFC=(curFC+1)%fcards.length;renderFC();}
+function prevFC(){curFC=(curFC-1+fcards.length)%fcards.length;renderFC();}
+function goFC(i){curFC=i;renderFC();}
+
+/* ── PRACTICE ── */
+function initPrac(){renderQ();}
+function renderQ(){
+  const q=pqs[curQ];
+  document.getElementById('prac-qnum').textContent=`Question ${curQ+1} of ${pqs.length}`;
+  document.getElementById('prac-q').textContent=q.q;
+  document.getElementById('prac-ctx').textContent='💡 '+q.ctx;
+  stopTimer();timerSec=120;updateTimerDisplay();
+  document.getElementById('timer-btn').textContent='▶ Start';
+  document.getElementById('timer-btn').classList.remove('stop');
+  document.querySelectorAll('.rate-btn').forEach(b=>{
+    b.classList.remove('selected');
+    if(ratings[curQ]){
+      if((ratings[curQ]==='g'&&b.classList.contains('r-g'))||(ratings[curQ]==='a'&&b.classList.contains('r-a'))||(ratings[curQ]==='r'&&b.classList.contains('r-r')))
+        b.classList.add('selected');
+    }
+  });
+  const dots=document.getElementById('prac-dots');
+  dots.innerHTML=pqs.map((_,i)=>{
+    let cls='prac-dot';
+    if(i===curQ)cls+=' current';
+    else if(ratings[i]==='g')cls+=' done-g';
+    else if(ratings[i]==='a')cls+=' done-a';
+    else if(ratings[i]==='r')cls+=' done-r';
+    return `<div class="${cls}" onclick="jumpQ(${i})"></div>`;
+  }).join('');
+  document.getElementById('prev-btn').disabled=curQ===0;
+  document.getElementById('next-btn').textContent=curQ===pqs.length-1?'Finish ✓':'Next →';
+}
+function toggleTimer(){
+  if(timerRunning){stopTimer();document.getElementById('timer-btn').textContent='▶ Resume';document.getElementById('timer-btn').classList.remove('stop');}
+  else{
+    timerRunning=true;document.getElementById('timer-btn').textContent='⏸ Pause';document.getElementById('timer-btn').classList.add('stop');
+    timerInt=setInterval(()=>{
+      timerSec--;updateTimerDisplay();
+      if(timerSec<=0){stopTimer();document.getElementById('timer').textContent='Time!';document.getElementById('timer').className='timer-display urgent';}
+    },1000);
+  }
+}
+function stopTimer(){clearInterval(timerInt);timerRunning=false;}
+function updateTimerDisplay(){
+  const m=Math.floor(timerSec/60),s=timerSec%60;
+  const el=document.getElementById('timer');
+  el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer-display'+(timerSec<=30?' warn':'')+(timerSec<=10?' urgent':'');
+}
+function rate(r){
+  if(ratings[curQ])scores[ratings[curQ]]--;
+  ratings[curQ]=r;scores[r]++;
+  document.querySelectorAll('.rate-btn').forEach(b=>{b.classList.remove('selected');if((r==='g'&&b.classList.contains('r-g'))||(r==='a'&&b.classList.contains('r-a'))||(r==='r'&&b.classList.contains('r-r')))b.classList.add('selected');});
+  document.getElementById('sc-g').textContent=scores.g;
+  document.getElementById('sc-a').textContent=scores.a;
+  document.getElementById('sc-r').textContent=scores.r;
+  renderQ();
+}
+function nextQ(){
+  if(curQ<pqs.length-1){curQ++;renderQ();}
+  else{showSummary();}
+}
+function prevQ(){if(curQ>0){curQ--;renderQ();}}
+function jumpQ(i){curQ=i;renderQ();}
+function showSummary(){
+  stopTimer();
+  document.getElementById('prac-q-wrap').style.display='none';
+  const s=document.getElementById('prac-sum');
+  s.classList.add('show');
+  document.getElementById('sum-g').textContent=scores.g;
+  document.getElementById('sum-a').textContent=scores.a;
+  document.getElementById('sum-r').textContent=scores.r;
+}
+function resetPrac(){
+  curQ=0;ratings={};scores={g:0,a:0,r:0};
+  document.getElementById('sc-g').textContent=0;document.getElementById('sc-a').textContent=0;document.getElementById('sc-r').textContent=0;
+  document.getElementById('prac-sum').classList.remove('show');
+  document.getElementById('prac-q-wrap').style.display='block';
+  renderQ();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HAIL — Find Your Programme</title>
+<style>
+  :root{
+    --navy:#1F3864; --blue:#2E75B6; --light:#EAF2FB; --ink:#1a1a1a; --grey:#666;
+    --good:#1e7d3d; --warn:#8a5a00; --warnbg:#fff3cd; --radius:14px;
+    --gold:#b8860b; --goldbg:#fff8e6;
+    --maxw: 760px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:#f5f7fa; color:var(--ink); line-height:1.5;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:16px;}
+  header.top{
+    background:linear-gradient(135deg,var(--navy),var(--blue)); color:#fff;
+    padding:28px 16px 24px;
+  }
+  header.top .wrap{padding:0 16px;}
+  header.top h1{margin:0 0 4px; font-size:clamp(20px,5vw,28px);}
+  header.top p{margin:0; opacity:.9; font-size:clamp(13px,3.5vw,15px);}
+  .badge{
+    display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.4);
+    border-radius:999px; padding:3px 10px; font-size:12px; margin-top:10px; margin-right:6px;
+  }
+  .badge.gold{background:#ffdd66; color:#4a3800; border-color:#e0b800; font-weight:700;}
+  main{padding:20px 0 60px;}
+  .card{
+    background:#fff; border-radius:var(--radius); padding:20px; margin-bottom:16px;
+    box-shadow:0 1px 3px rgba(0,0,0,.08); border:1px solid #e7ebf0;
+  }
+  .progress-row{display:flex; align-items:center; gap:10px; margin-bottom:18px;}
+  .progress-track{flex:1; height:8px; background:#e2e8f0; border-radius:99px; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--blue); transition:width .25s ease;}
+  .progress-label{font-size:12px; color:var(--grey); white-space:nowrap;}
+  .step-title{font-size:clamp(17px,4.5vw,21px); font-weight:700; margin:0 0 6px; color:var(--navy);}
+  .step-sub{font-size:14px; color:var(--grey); margin:0 0 18px;}
+  .options{display:grid; grid-template-columns:1fr; gap:10px;}
+  @media(min-width:520px){ .options.two-col{grid-template-columns:1fr 1fr;} }
+  .opt{
+    display:flex; align-items:flex-start; gap:10px; text-align:left;
+    border:2px solid #dfe4ea; border-radius:12px; padding:14px 16px;
+    background:#fff; cursor:pointer; font-size:15px; width:100%;
+    transition:border-color .15s, background .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .opt:hover{border-color:var(--blue);}
+  .opt.selected{border-color:var(--blue); background:var(--light);}
+  .opt .dot{
+    flex:none; width:20px; height:20px; border-radius:50%; border:2px solid #c3ccd6; margin-top:1px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .opt.selected .dot{border-color:var(--blue); background:var(--blue);}
+  .opt.selected .dot::after{content:""; width:8px; height:8px; border-radius:50%; background:#fff;}
+  .opt .txt strong{display:block; font-size:15px;}
+  .opt .txt span{display:block; font-size:12.5px; color:var(--grey); margin-top:2px;}
+  input[type=text]{
+    width:100%; padding:12px 14px; border:2px solid #dfe4ea; border-radius:10px; font-size:15px;
+    font-family:inherit;
+  }
+  input[type=text]:focus{outline:none; border-color:var(--blue);}
+  label.field-label{display:block; font-size:13px; font-weight:600; color:var(--navy); margin:14px 0 6px;}
+  .nav-row{display:flex; gap:10px; margin-top:20px;}
+  button{
+    font-family:inherit; font-size:15px; font-weight:600; border-radius:10px; padding:13px 18px;
+    border:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  }
+  .btn-primary{background:var(--navy); color:#fff; flex:1;}
+  .btn-primary:disabled{background:#b7c0cc; cursor:not-allowed;}
+  .btn-secondary{background:#eef1f5; color:var(--navy); flex:none;}
+  .btn-link{background:none; color:var(--blue); padding:8px 4px; text-decoration:underline;}
+  /* results */
+  .result-hero{
+    background:linear-gradient(135deg,var(--navy),var(--blue)); color:#fff; border-radius:var(--radius);
+    padding:22px 20px; margin-bottom:16px;
+  }
+  .result-hero .track{font-size:12.5px; opacity:.85; text-transform:uppercase; letter-spacing:.04em;}
+  .result-hero h2{margin:4px 0 8px; font-size:clamp(19px,5vw,25px);}
+  .result-hero .outcome{font-size:14.5px; opacity:.95;}
+  .pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+  .pill{background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.4); border-radius:999px; padding:5px 12px; font-size:12.5px;}
+  .section-title{font-size:15px; font-weight:700; color:var(--navy); margin:0 0 10px; display:flex; align-items:center; gap:8px;}
+  ul.syllabus{margin:0; padding-left:0; list-style:none;}
+  ul.syllabus li{
+    padding:10px 0 10px 30px; border-bottom:1px solid #eef1f5; font-size:14.5px; position:relative;
+  }
+  ul.syllabus li:last-child{border-bottom:none;}
+  ul.syllabus li::before{content:"✓"; position:absolute; left:0; top:10px; color:var(--good); font-weight:700;}
+  /* promo */
+  .promo-banner{
+    background:var(--goldbg); border:1.5px dashed var(--gold); border-radius:12px;
+    padding:14px 16px; margin-bottom:16px; display:flex; gap:10px; align-items:flex-start;
+  }
+  .promo-banner .icon{font-size:22px; line-height:1;}
+  .promo-banner strong{color:#5a4400; display:block; font-size:14.5px;}
+  .promo-banner span{font-size:13px; color:#6b5300;}
+  .price-box{border:2px solid var(--light); border-radius:12px; padding:16px; margin-bottom:10px; position:relative;}
+  .price-box.recommended{border-color:var(--blue); background:#f7fafd;}
+  .price-box .name{font-weight:700; font-size:14.5px; color:var(--navy);}
+  .price-box .tag{position:absolute; top:-10px; right:14px; background:var(--blue); color:#fff; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700;}
+  .price-row{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:6px 0 2px;}
+  .list-price{font-size:15px; color:#a3adb8; text-decoration:line-through;}
+  .amount{font-size:24px; font-weight:800; color:var(--ink);}
+  .amount small{font-size:13px; font-weight:500; color:var(--grey);}
+  .save-badge{background:#e6f6ea; color:var(--good); font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:999px;}
+  .price-box .inclusions{font-size:13px; color:var(--grey); margin-top:6px;}
+  .savings-line{font-size:13px; color:var(--good); font-weight:600; margin-top:8px;}
+  .tag-best{background:var(--blue); color:#fff; font-size:11px; padding:2px 8px; border-radius:999px; margin-left:8px;}
+  .note{
+    background:var(--warnbg); border:1px solid #f0dfa0; color:var(--warn); border-radius:10px;
+    padding:12px 14px; font-size:13px; margin-top:10px;
+  }
+  .note.info{background:#e8f1fb; border-color:#bcd6f0; color:var(--navy);}
+  .guarantee{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--navy); margin-top:12px; padding-top:12px; border-top:1px dashed #dfe4ea;}
+  .contact-row{display:flex; flex-wrap:wrap; gap:14px; font-size:13.5px; margin-top:6px;}
+  .contact-row a{color:var(--blue); text-decoration:none;}
+  .footer-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;}
+  .footer-actions button{flex:1; min-width:140px;}
+  footer.legal{text-align:center; font-size:11.5px; color:#9aa4b0; padding:16px 0 30px;}
+  @media print{
+    header.top, .nav-row, .footer-actions, .no-print{display:none !important;}
+    body{background:#fff;}
+    .card{box-shadow:none; border:1px solid #ccc;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>HAIL Tutoring</h1>
+    <p>Human In the AI Loop — tell us where you're headed, we'll map the fastest path there.</p>
+    <span class="badge">AI Assisted · Human Led</span>
+    <span class="badge gold">🎁 First session free for new clients</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <main id="app"></main>
+</div>
+
+<footer class="legal">© 2026 Sudheerkumar Gujjeli · HAIL — this is a draft planning tool; final pricing confirmed by HAIL before booking.</footer>
+
+<script>
+/* ---------------- Data grounded in the two delivered roadmap docs ---------------- */
+const TRACKS = {
+  ai: {
+    label: "AI Engineer Track",
+    tiers: {
+      beginner:     { name: "AI Beginner Engineer", full: 10, crash: 4,
+        outcome: "Can call LLM APIs, write solid prompts, and ship a small FastAPI-backed AI tool.",
+        syllabus: ["Python Refresher for AI + Dev Environment Setup", "The LLM Mental Model — What's Actually Happening", "Prompt Engineering Fundamentals", "Ship Your First AI App"] },
+      intermediate: { name: "AI Intermediate Engineer", full: 12, crash: 5,
+        outcome: "Can build, evaluate, containerise, and deploy a production RAG service.",
+        syllabus: ["RAG Architecture Deep-Dive", "Chunking Strategies & Ingestion Pipelines", "Production Vector Stores", "Django or FastAPI for AI Backends", "RAG Evaluation"] },
+      specialist:   { name: "AI Specialist Engineer (Agentic/GenAI)", full: 12, crash: 5,
+        outcome: "Designs multi-agent LangGraph systems, mentors a team, can pass an Aviva-style GenAI interview.",
+        syllabus: ["Agentic AI Foundations — LLM vs Workflow vs Agent", "LangGraph Fundamentals — Nodes, Edges, State", "Multi-Agent Orchestration", "Tool Use & External Integrations", "Memory & Context Engineering"] }
+    }
+  },
+  architect: {
+    label: "Cloud & Platform Architecture Track",
+    tiers: {
+      beginner:     { name: "Cloud Native Engineer", full: 10, crash: 4,
+        outcome: "Ships a well-structured, tested, CI/CD-deployed .NET API on Azure.",
+        syllabus: ["C#/.NET Refresher & Modern Engineering Practices", "API Design Fundamentals", "Azure Fundamentals for Developers", "CI/CD with Azure DevOps"] },
+      intermediate: { name: "Cloud Solutions Architect", full: 12, crash: 5,
+        outcome: "Designs distributed, resilient, well-architected Azure solutions using DDD — practical architecture skill, not exam prep.",
+        syllabus: ["Distributed Systems Foundations", "Domain-Driven Design", "Cloud Design Patterns", "Azure Well-Architected Framework", "Microservices Architecture with .NET"] },
+      specialist:   { name: "Platform Architect Specialist", full: 12, crash: 5,
+        outcome: "Owns architectural governance, runs design reviews, plans legacy modernisation, mentors delivery teams — mirrors the Aviva Platform Architect JD.",
+        syllabus: ["Platform Ownership & Architectural Governance", "Design Review & Technical Design Support", "Legacy Modernisation Strategy", "Platform Roadmap & Simplification", "Hands-On Technical Leadership (C#/.NET)"] }
+    }
+  }
+};
+
+/* PRICING — repositioned 2026-07-10 for an approachable, non-certification tutoring offer.
+   "listPrice" = the original/reference rate (shown struck through for anchoring).
+   "price" = the current introductory rate actually charged.
+   UK listPrice = HAIL's originally quoted rates (HAIL_Career_Coaching_Quote.docx).
+   India listPrice = derived from HAIL's confirmed Rs 3,500/session anchor using the
+   UK's own volume-discount ratio (see prior version's comments for that derivation).
+   Both markets now carry a further ~35-45% introductory reduction, increasing with
+   commitment length (rewards the bundle, still leaves a working margin — not a giveaway). */
+const PACKAGES_UK = [
+  { id:"starter",   name:"Starter — Single Session",   listPrice:75,  price:49,  sessions:1, cadence:"one-time" },
+  { id:"standard",  name:"Standard — Monthly Coaching", listPrice:249, price:159, sessions:4, cadence:"per month", tag:"Most Popular" },
+  { id:"intensive", name:"Intensive — Job Hunt Sprint", listPrice:449, price:279, sessions:8, cadence:"per month", tag:"Best Value" }
+];
+const PACKAGES_INDIA = [
+  { id:"starter",   name:"Starter — Single Session",   listPrice:3500,  price:1999,  sessions:1, cadence:"one-time" },
+  { id:"standard",  name:"Standard — Monthly Coaching", listPrice:11600, price:6499,  sessions:4, cadence:"per month", tag:"Most Popular" },
+  { id:"intensive", name:"Intensive — Job Hunt Sprint", listPrice:20800, price:11499, sessions:8, cadence:"per month", tag:"Best Value" }
+];
+
+function packagesFor(market){ return market === "india" ? PACKAGES_INDIA : PACKAGES_UK; }
+function currencyFor(market){ return market === "india" ? "₹" : "£"; }
+function savePct(pkg){ return Math.round((1 - pkg.price/pkg.listPrice) * 100); }
+
+/* Per-session rate implied by whichever market's own current (introductory) packages apply.
+   Anything beyond 8 sessions/month is NOT yet priced by HAIL in either market — flagged, not invented. */
+function perSessionRate(n, market){
+  const pk = packagesFor(market);
+  const [starter, standard, intensive] = pk;
+  if(n<=1) return starter.price;
+  if(n<=4) return standard.price/standard.sessions;
+  return intensive.price/intensive.sessions; // floor rate, flagged as draft/extrapolated beyond 8 sessions
+}
+function estimateProgramCost(totalSessions, market){
+  const rate = perSessionRate(totalSessions, market);
+  const roundTo = market === "india" ? 50 : 5;
+  return Math.round(rate * totalSessions / roundTo) * roundTo;
+}
+
+/* ---------------- Wizard state ---------------- */
+const STEPS = ["track","experience","context","timeline","market","review"];
+let state = { track:null, experience:null, jd:"", market:null, timeline:null, availability:null, step:0 };
+
+function opt(id, groupKey, value, title, sub){
+  const selected = state[groupKey] === value;
+  return `<div class="opt ${selected?'selected':''}" data-group="${groupKey}" data-value="${value}">
+      <div class="dot"></div>
+      <div class="txt"><strong>${title}</strong>${sub?`<span>${sub}</span>`:''}</div>
+    </div>`;
+}
+
+function progressBar(stepIdx){
+  const pct = Math.round((stepIdx/(STEPS.length-1))*100);
+  return `<div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="progress-label">Step ${Math.min(stepIdx+1,STEPS.length)} of ${STEPS.length}</div>
+  </div>`;
+}
+
+function render(){
+  const app = document.getElementById("app");
+  const s = STEPS[state.step];
+  let html = "";
+
+  if(s === "track"){
+    html = `<div class="card">
+      ${progressBar(state.step)}
+      <div class="step-title">What are you preparing for?</div>
+      <div class="step-sub">Pick the track that matches your goal — you can switch later.</div>
+      <div class="options">
+        ${opt('t1','track','ai','AI Engineer / GenAI role','Prompting, RAG, LangGraph, agentic systems')}
+        ${opt('t2','track','architect','Cloud & Platform Architecture role','C#/.NET, Azure, DDD, distributed systems')}
+        ${opt('t3','track','unsure','Not sure yet',"Answer a couple more questions and we'll suggest one")}
+      </div>
+      <div class="nav-row"><button class="btn-primary" id="next" ${!state.track?'disabled':''}>Continue</button></div>
+    </div>`;
+  }
+
+  if(s === "experience"){
+    html = `<div class="card">
+      ${progressBar(state.step)}
+      <div class="step-title">Your current experience</div>
+      <div class="step-sub">This decides your starting tier.</div>
+      <div class="options">
+        ${opt('e1','experience','new','New to this area','Comfortable with basic programming logic, little/no production experience in this domain')}
+        ${opt('e2','experience','working','Working developer','Building software professionally, new to this specific domain (GenAI or cloud architecture)')}
+        ${opt('e3','experience','senior','Senior engineer / architect-track','5+ years, targeting a lead/architect-level role')}
+      </div>
+      <div class="nav-row"><button class="btn-secondary" id="back">Back</button><button class="btn-primary" id="next" ${!state.experience?'disabled':''}>Continue</button></div>
+    </div>`;
+  }
+
+  if(s === "context"){
+    html = `<div class="card">
+      ${progressBar(state.step)}
+      <div class="step-title">Do you have a specific role in mind?</div>
+      <div class="step-sub">Optional — if you share a target JD or company, sessions get tailored to it (as with the Aviva GenAI and Platform Architect roadmaps).</div>
+      <label class="field-label">Target role / company (optional)</label>
+      <input type="text" id="jdInput" placeholder="e.g. Aviva GenAI Developer" value="${state.jd}">
+      <label class="field-label">Which market are you job-hunting in?</label>
+      <div class="options">
+        ${opt('m1','market','uk','UK market','')}
+        ${opt('m2','market','india','India market','')}
+        ${opt('m3','market','other','Other / remote-global','')}
+      </div>
+      <div class="nav-row"><button class="btn-secondary" id="back">Back</button><button class="btn-primary" id="next" ${!state.market?'disabled':''}>Continue</button></div>
+    </div>`;
+  }
+
+  if(s === "timeline"){
+    html = `<div class="card">
+      ${progressBar(state.step)}
+      <div class="step-title">Your timeline</div>
+      <div class="step-sub">This decides Full Course vs. Crash Course.</div>
+      <div class="options">
+        ${opt('l1','timeline','urgent','Interview this week','Need JD-triage fast')}
+        ${opt('l2','timeline','soon','2–4 weeks away','Some runway, still time-pressured')}
+        ${opt('l3','timeline','planned','1–3 months away','Building real competency, not cramming')}
+        ${opt('l4','timeline','none','No fixed deadline','Upskilling at my own pace')}
+      </div>
+      <div class="nav-row"><button class="btn-secondary" id="back">Back</button><button class="btn-primary" id="next" ${!state.timeline?'disabled':''}>Continue</button></div>
+    </div>`;
+  }
+
+  if(s === "market"){
+    html = `<div class="card">
+      ${progressBar(state.step)}
+      <div class="step-title">Availability</div>
+      <div class="step-sub">HAIL currently books Monday–Saturday, 7am–8pm GMT.</div>
+      <div class="options">
+        ${opt('a1','availability','uk','UK daytime/evening hours','')}
+        ${opt('a2','availability','india','India evening hours (fits UK 7am–8pm GMT window)','')}
+        ${opt('a3','availability','flexible','Flexible','')}
+      </div>
+      <div class="nav-row"><button class="btn-secondary" id="back">Back</button><button class="btn-primary" id="next" ${!state.availability?'disabled':''}>See my recommendation</button></div>
+    </div>`;
+  }
+
+  if(s === "review"){
+    html = renderResults();
+  }
+
+  app.innerHTML = html;
+  attachHandlers();
+}
+
+function attachHandlers(){
+  document.querySelectorAll(".opt").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const g = el.dataset.group, v = el.dataset.value;
+      state[g] = v;
+      render();
+    });
+  });
+  const jdInput = document.getElementById("jdInput");
+  if(jdInput){ jdInput.addEventListener("input", e=>{ state.jd = e.target.value; }); }
+  const nextBtn = document.getElementById("next");
+  if(nextBtn){ nextBtn.addEventListener("click", ()=>{ if(state.step < STEPS.length-1) state.step++; render(); window.scrollTo(0,0); }); }
+  const backBtn = document.getElementById("back");
+  if(backBtn){ backBtn.addEventListener("click", ()=>{ if(state.step>0) state.step--; render(); window.scrollTo(0,0); }); }
+  const restartBtn = document.getElementById("restart");
+  if(restartBtn){ restartBtn.addEventListener("click", ()=>{ state = { track:null, experience:null, jd:"", market:null, timeline:null, availability:null, step:0 }; render(); window.scrollTo(0,0); }); }
+  const copyBtn = document.getElementById("copySummary");
+  if(copyBtn){ copyBtn.addEventListener("click", copySummary); }
+  const printBtn = document.getElementById("printBtn");
+  if(printBtn){ printBtn.addEventListener("click", ()=>window.print()); }
+}
+
+function resolveTrackKey(){
+  if(state.track === "ai" || state.track === "architect") return state.track;
+  // "unsure": infer from experience only as a soft default — clearly labelled as a guess in the UI
+  return "ai";
+}
+function resolveTierKey(){
+  if(state.experience === "new") return "beginner";
+  if(state.experience === "senior") return "specialist";
+  return "intermediate";
+}
+function resolveFormat(){
+  return (state.timeline === "urgent" || state.timeline === "soon") ? "crash" : "full";
+}
+
+function renderResults(){
+  const trackKey = resolveTrackKey();
+  const tierKey = resolveTierKey();
+  const track = TRACKS[trackKey];
+  const tier = track.tiers[tierKey];
+  const format = resolveFormat();
+  const sessionCount = format === "full" ? tier.full : tier.crash;
+  const formatLabel = format === "full" ? "Full Course" : "Crash Course";
+
+  const market = state.market === "india" ? "india" : "uk";
+  const cur = currencyFor(market);
+  const packages = packagesFor(market);
+  const estCost = estimateProgramCost(sessionCount, market);
+  const isDraftRange = sessionCount > 8;
+
+  // best-fit package for reference/comparison
+  let bestFit = packages[0];
+  for(const p of packages){ if(p.sessions <= sessionCount) bestFit = p; }
+
+  // anchor: what it would cost to book each session separately at the single-session list rate
+  const starter = packages[0];
+  const soloEquivalent = starter.listPrice * sessionCount;
+  const bundleSavings = soloEquivalent - estCost;
+
+  const unsureNote = state.track === "unsure"
+    ? `<div class="note info">You said you weren't sure which track — this is a starting guess (AI Engineer) based on your other answers. Tell your tutor and it can be switched before Session 1 at no cost.</div>` : "";
+
+  const marketNote = market === "india"
+    ? `<div class="note info">India-market rates above are HAIL's current introductory pricing, derived from the confirmed Rs 3,500 single-session anchor — confirm before quoting a large client.</div>`
+    : "";
+
+  const draftRangeNote = isDraftRange
+    ? `<div class="note">Your recommended ${formatLabel.toLowerCase()} runs ${sessionCount} sessions, longer than HAIL's largest published package (Intensive, 8 sessions/month). The estimate below extrapolates from Intensive's per-session rate and should be confirmed with HAIL before quoting a client.</div>`
+    : "";
+
+  return `
+    <div class="result-hero">
+      <div class="track">${track.label}</div>
+      <h2>${tier.name}<span class="tag-best" style="vertical-align:middle;">${formatLabel}</span></h2>
+      <div class="outcome">${tier.outcome}</div>
+      <div class="pill-row">
+        <span class="pill">${sessionCount} sessions</span>
+        <span class="pill">${state.market==='india' ? 'India-hours friendly' : 'UK hours'}</span>
+        ${state.jd ? `<span class="pill">Tailored to: ${escapeHtml(state.jd)}</span>` : ""}
+      </div>
+    </div>
+
+    ${unsureNote}
+
+    <div class="promo-banner">
+      <div class="icon">🎁</div>
+      <div><strong>New to HAIL? Your first session is free.</strong>
+      <span>No card, no commitment — meet your tutor and see the fit before you pay anything. Every paid package below still carries HAIL's 7-day money-back guarantee.</span></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📘 First sessions in your syllabus</div>
+      <ul class="syllabus">
+        ${tier.syllabus.map(s=>`<li>${s}</li>`).join("")}
+      </ul>
+      <div class="note info">Full session-by-session breakdown and follow-up actions are in HAIL's companion roadmap document for this track. No certification exam is bundled with this programme — it's hands-on skills coaching, priced accordingly.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">💰 Introductory pricing (${market === "india" ? "India, ₹" : "UK, £"})</div>
+      ${packages.map(p => `
+        <div class="price-box ${p.id===bestFit.id?'recommended':''}">
+          ${p.tag ? `<div class="tag">${p.tag}</div>` : ""}
+          <div class="name">${p.name}</div>
+          <div class="price-row">
+            <span class="list-price">${cur}${p.listPrice.toLocaleString('en-IN')}</span>
+            <span class="amount">${cur}${p.price.toLocaleString('en-IN')} <small>${p.cadence}</small></span>
+            <span class="save-badge">Save ${savePct(p)}%</span>
+          </div>
+          <div class="inclusions">${p.sessions} session${p.sessions>1?'s':''} included</div>
+        </div>
+      `).join("")}
+      <div class="price-box">
+        <div class="name">Estimated total for your ${sessionCount}-session ${formatLabel}</div>
+        <div class="amount">≈ ${cur}${estCost.toLocaleString('en-IN')}</div>
+        <div class="savings-line">You save ${cur}${bundleSavings.toLocaleString('en-IN')} vs. booking ${sessionCount} single sessions at the list rate.</div>
+      </div>
+      ${draftRangeNote}
+      ${marketNote}
+      <div class="guarantee">🛡️ Not happy after session one (paid or free)? Full refund, no questions asked.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📩 Next step</div>
+      <p style="font-size:14.5px; margin:0 0 10px;">Reply to HAIL with this recommendation to claim your free first session and lock in today's introductory rate.</p>
+      <div class="contact-row">
+        <a href="mailto:sudheerkumar.gujjeli@hailoop.co.uk">✉ sudheerkumar.gujjeli@hailoop.co.uk</a>
+        <a href="https://www.linkedin.com/in/sudheerkumargujjeli/" target="_blank" rel="noopener">💼 LinkedIn</a>
+      </div>
+      <div class="footer-actions no-print" style="margin-top:14px;">
+        <button class="btn-secondary" id="copySummary">Copy summary</button>
+        <button class="btn-secondary" id="printBtn">Print / Save PDF</button>
+      </div>
+      <div class="nav-row no-print">
+        <button class="btn-link" id="restart">Start over</button>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(str){
+  return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function copySummary(){
+  const trackKey = resolveTrackKey(), tierKey = resolveTierKey();
+  const tier = TRACKS[trackKey].tiers[tierKey];
+  const format = resolveFormat();
+  const sessionCount = format === "full" ? tier.full : tier.crash;
+  const market = state.market === "india" ? "india" : "uk";
+  const cur = currencyFor(market);
+  const text = `HAIL Tutoring — Recommended Programme\n`+
+    `Track: ${TRACKS[trackKey].label}\n`+
+    `Tier: ${tier.name}\n`+
+    `Format: ${format === "full" ? "Full Course" : "Crash Course"} (${sessionCount} sessions)\n`+
+    (state.jd ? `Target role: ${state.jd}\n` : "") +
+    `Market: ${state.market || "n/a"}\n`+
+    `First session: FREE for new clients\n`+
+    `Estimated investment thereafter: ${cur}${estimateProgramCost(sessionCount, market).toLocaleString('en-IN')} (introductory rate, draft — confirm with HAIL)\n`+
+    `Contact: sudheerkumar.gujjeli@hailoop.co.uk`;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = document.getElementById("copySummary");
+      const old = btn.textContent; btn.textContent = "Copied ✓";
+      setTimeout(()=>{btn.textContent = old;}, 1800);
+    });
+  }
+}
+
+render();
+</script>
+</body>
+</html>
