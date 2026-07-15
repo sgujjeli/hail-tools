@@ -80,10 +80,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   width:100%;min-height:190px;
   border:1.5px solid var(--border);border-radius:10px;
   padding:14px 16px;font-family:'Inter',sans-serif;font-size:.85rem;line-height:1.65;
-  color:var(--text);background:#FAFFFE;resize:vertical;outline:none;
+  color:var(--text);background:#FAFFFE;resize:none;outline:none;
   transition:border-color .2s;
 }
-.jd-input:focus{border-color:var(--accent);}
+.jd-input:focus{border-color:var(--border);}
+.jd-input[readonly]{background:#F5F9F8;color:var(--muted);cursor:default;user-select:text;}
+.locked-note{display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted);margin-top:6px;}
+.locked-note::before{content:'🔒';font-size:.75rem;}
 
 .opts{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;}
 .opt{
@@ -402,7 +405,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
   <div class="gen-card">
     <div class="field-label">Job Description</div>
-    <textarea class="jd-input" id="jd-input">Senior Full-Stack Engineer – AI & Cloud Platforms
+    <div class="locked-note">Pre-loaded for this demo — contact HAIL to generate your own</div>
+    <textarea class="jd-input" id="jd-input" readonly>Senior Full-Stack Engineer – AI & Cloud Platforms
 London, UK | £75,000–£95,000 | Hybrid (3 days on-site)
 
 We are looking for a Senior Full-Stack Engineer to join our growing AI Platform team. You will lead the design and delivery of intelligent, cloud-native enterprise applications.
@@ -433,11 +437,9 @@ Nice to Have:
 We value engineers who keep humans in the loop and build AI that amplifies expertise, not replaces it.</textarea>
 
     <div style="margin:20px 0 0;">
-      <div class="field-label" style="margin-bottom:6px;">
-        CV / Resume Highlights
-        <span style="font-size:.68rem;font-weight:500;color:var(--muted);margin-left:6px;">(optional — paste key experience for a personalised Strengths analysis)</span>
-      </div>
-      <textarea class="jd-input" id="cv-input" style="min-height:90px;font-size:.82rem;" placeholder="e.g. 14 years .NET, Angular 20 at Watlow, AKS deployments at Infosys, built WATTY AI chatbot on Azure OpenAI, Camunda BPM expert, led squads of 8 engineers..."></textarea>
+      <div class="field-label" style="margin-bottom:6px;">CV / Resume Highlights</div>
+      <div class="locked-note">Pre-loaded for this demo — contact HAIL to generate your own</div>
+      <textarea class="jd-input" id="cv-input" style="min-height:90px;font-size:.82rem;" readonly>14 years .NET, Angular 20 at Watlow, AKS deployments at Infosys, built WATTY AI chatbot on Azure OpenAI, Camunda BPM expert, led squads of 8 engineers, AZ-305 & AWS SAA-C03 certified.</textarea>
     </div>
 
     <div class="opts">
