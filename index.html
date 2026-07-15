@@ -40,12 +40,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   box-shadow:0 2px 16px rgba(0,0,0,.28);
 }
 .tb-left{display:flex;align-items:center;gap:12px;}
-.hail-logo{
-  width:36px;height:36px;border-radius:8px;
-  background:var(--accent);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:.75rem;color:var(--brand);letter-spacing:.5px;
-  flex-shrink:0;
+.hail-logo-img{
+  width:40px;height:40px;border-radius:8px;
+  object-fit:contain;flex-shrink:0;
+  background:rgba(0,200,150,.15);padding:3px;
 }
 .tb-title{font-size:.95rem;font-weight:700;letter-spacing:-.2px;}
 .tb-sub{font-size:.7rem;color:rgba(255,255,255,.5);margin-top:1px;}
@@ -365,7 +363,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .b2b-sl{font-size:.74rem;color:rgba(255,255,255,.5);margin-top:3px;}
 
 /* ── FOOTER TAGLINE ── */
-.site-foot{background:#051830;color:rgba(255,255,255,.35);text-align:center;padding:16px 24px;font-size:.72rem;letter-spacing:.3px;}
+.site-foot{background:#051830;color:rgba(255,255,255,.35);text-align:center;padding:20px 24px;font-size:.72rem;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;}
+.site-foot img{width:22px;height:22px;border-radius:4px;opacity:.6;flex-shrink:0;}
 .site-foot span{color:var(--accent);}
 
 /* ── RESPONSIVE ── */
@@ -386,7 +385,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- ══ TOPBAR ══ -->
 <header class="topbar">
   <div class="tb-left">
-    <div class="hail-logo">HAIL</div>
+    <img class="hail-logo-img" src="https://sudheerkumargujjeli-human-in-the-ai-loop.lovable.app/assets/hail-logo-D4DQl-GL.png" alt="HAIL">
     <div>
       <div class="tb-title">Interview Playground Generator</div>
       <div class="tb-sub">Human In the AI Loop &nbsp;·&nbsp; AI Assisted, Human Led</div>
@@ -897,6 +896,7 @@ GOVERNANCE:
 </div><!-- end pg-section -->
 
 <footer class="site-foot">
+  <img src="https://sudheerkumargujjeli-human-in-the-ai-loop.lovable.app/assets/hail-logo-D4DQl-GL.png" alt="HAIL">
   © 2026 Sudheerkumar Gujjeli · Founder, <span>HAIL — Human In the AI Loop</span> · AI Assisted, Human Led.
 </footer>
 

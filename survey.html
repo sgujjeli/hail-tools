@@ -4,26 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HAIL — Find Your Programme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#1F3864; --blue:#2E75B6; --light:#EAF2FB; --ink:#1a1a1a; --grey:#666;
-    --good:#1e7d3d; --warn:#8a5a00; --warnbg:#fff3cd; --radius:14px;
+    --navy:#0A2540; --blue:#00C896; --light:rgba(0,200,150,.1); --ink:#0F172A; --grey:#64748B;
+    --good:#059669; --warn:#D97706; --warnbg:#FEF3C7; --radius:14px;
     --gold:#b8860b; --goldbg:#fff8e6;
     --maxw: 760px;
   }
   *{box-sizing:border-box;}
   body{
-    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:#f5f7fa; color:var(--ink); line-height:1.5;
+    margin:0; font-family:'Inter',sans-serif;
+    background:#F0FAF7; color:var(--ink); line-height:1.5;
   }
   .wrap{max-width:var(--maxw); margin:0 auto; padding:16px;}
   header.top{
-    background:linear-gradient(135deg,var(--navy),var(--blue)); color:#fff;
-    padding:28px 16px 24px;
+    background:var(--navy); color:#fff;
+    padding:22px 16px 20px;
+    box-shadow:0 2px 16px rgba(0,0,0,.28);
   }
   header.top .wrap{padding:0 16px;}
-  header.top h1{margin:0 0 4px; font-size:clamp(20px,5vw,28px);}
-  header.top p{margin:0; opacity:.9; font-size:clamp(13px,3.5vw,15px);}
+  .top-brand{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+  .top-logo{width:44px;height:44px;border-radius:8px;object-fit:contain;background:rgba(0,200,150,.15);padding:3px;flex-shrink:0;}
+  header.top h1{margin:0 0 2px; font-size:clamp(18px,5vw,24px); font-weight:800; letter-spacing:-.3px;}
+  header.top p{margin:0; opacity:.8; font-size:clamp(13px,3.5vw,14px);}
   .badge{
     display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.4);
     border-radius:999px; padding:3px 10px; font-size:12px; margin-top:10px; margin-right:6px;
@@ -100,7 +105,7 @@
   .promo-banner strong{color:#5a4400; display:block; font-size:14.5px;}
   .promo-banner span{font-size:13px; color:#6b5300;}
   .price-box{border:2px solid var(--light); border-radius:12px; padding:16px; margin-bottom:10px; position:relative;}
-  .price-box.recommended{border-color:var(--blue); background:#f7fafd;}
+  .price-box.recommended{border-color:var(--blue); background:var(--light);}
   .price-box .name{font-weight:700; font-size:14.5px; color:var(--navy);}
   .price-box .tag{position:absolute; top:-10px; right:14px; background:var(--blue); color:#fff; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700;}
   .price-row{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:6px 0 2px;}
@@ -115,13 +120,14 @@
     background:var(--warnbg); border:1px solid #f0dfa0; color:var(--warn); border-radius:10px;
     padding:12px 14px; font-size:13px; margin-top:10px;
   }
-  .note.info{background:#e8f1fb; border-color:#bcd6f0; color:var(--navy);}
+  .note.info{background:rgba(0,200,150,.07); border-color:rgba(0,200,150,.25); color:var(--navy);}
   .guarantee{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--navy); margin-top:12px; padding-top:12px; border-top:1px dashed #dfe4ea;}
   .contact-row{display:flex; flex-wrap:wrap; gap:14px; font-size:13.5px; margin-top:6px;}
   .contact-row a{color:var(--blue); text-decoration:none;}
   .footer-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;}
   .footer-actions button{flex:1; min-width:140px;}
-  footer.legal{text-align:center; font-size:11.5px; color:#9aa4b0; padding:16px 0 30px;}
+  footer.legal{text-align:center; font-size:11.5px; color:#9aa4b0; padding:20px 0 32px; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;}
+  footer.legal img{width:20px;height:20px;border-radius:3px;opacity:.5;flex-shrink:0;}
   @media print{
     header.top, .nav-row, .footer-actions, .no-print{display:none !important;}
     body{background:#fff;}
@@ -133,10 +139,17 @@
 
 <header class="top">
   <div class="wrap">
-    <h1>HAIL Tutoring</h1>
-    <p>Human In the AI Loop — tell us where you're headed, we'll map the fastest path there.</p>
-    <span class="badge">AI Assisted · Human Led</span>
-    <span class="badge gold">🎁 First session free for new clients</span>
+    <div class="top-brand">
+      <img class="top-logo" src="https://sudheerkumargujjeli-human-in-the-ai-loop.lovable.app/assets/hail-logo-D4DQl-GL.png" alt="HAIL">
+      <div>
+        <h1>HAIL Tutoring</h1>
+        <p>Human In the AI Loop — tell us where you're headed, we'll map the fastest path there.</p>
+      </div>
+    </div>
+    <div>
+      <span class="badge">AI Assisted · Human Led</span>
+      <span class="badge gold">🎁 First session free for new clients</span>
+    </div>
   </div>
 </header>
 
@@ -144,7 +157,10 @@
   <main id="app"></main>
 </div>
 
-<footer class="legal">© 2026 Sudheerkumar Gujjeli · HAIL — this is a draft planning tool; final pricing confirmed by HAIL before booking.</footer>
+<footer class="legal">
+  <img src="https://sudheerkumargujjeli-human-in-the-ai-loop.lovable.app/assets/hail-logo-D4DQl-GL.png" alt="HAIL">
+  © 2026 Sudheerkumar Gujjeli · HAIL — this is a draft planning tool; final pricing confirmed by HAIL before booking.
+</footer>
 
 <script>
 /* ---------------- Data grounded in the two delivered roadmap docs ---------------- */
